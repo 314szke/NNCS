@@ -39,8 +39,8 @@ end
 
 if options.plot == 1
     P = BreachSamplesPlot(falsification_result);
-    P.set_y_axis('In1_u1')
-    P.set_x_axis('In1_u0')
+    P.set_y_axis('ref_u1')
+    P.set_x_axis('ref_u0')
 end
 
 

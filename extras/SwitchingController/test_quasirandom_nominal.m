@@ -12,7 +12,7 @@ load_system('switching_controller_nominal_breach');
 set_param('switching_controller_nominal_breach', 'FastRestart', 'on');
 
 %% Inputs
-input_params = Bnom.expand_param_name('In1_u.+'); % get all amplitude input parameters
+input_params = Bnom.expand_param_name('ref_u.+'); % get all amplitude input parameters
 Bnom.SetParamRanges(input_params, [0 1]);
 
 %% Requirements

@@ -42,7 +42,7 @@ options.cex_threshold = 5;
 options.plot = 1;
 
 % Other parameters
-training_options.error_threshold = VALIDATION_ERROR_THRESHOLD;
+training_options.error_threshold = 0.1;
 training_options.use_all_data = 1;
 rng(1976); % random generator seed for Matlab
 plot_labels1 = {'ref', 'u', 'u_nn', 'y', 'y_nn'};

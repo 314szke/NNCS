@@ -18,12 +18,12 @@ nn_models{2}.block_name = 'nn';
 nn_models{3}.path = parallel_model_after_retraining_path;
 nn_models{3}.block_name = 'nn_old';
 
-% Create required models
-nominal_model = CreateModel(nominal_model_path);
-
 % Simulink parameters
 simulation.time_window = 40;
 simulation.time_step = 0.005;
+
+% Create required models
+nominal_model = CreateModel(nominal_model_path);
 
 % Input coverage parameters
 coverage_options.min = 0;
