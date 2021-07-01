@@ -1,0 +1,22 @@
+# Predicate to detect an input/ref step
+step_in1 := abs(In1[t+time_step]-In1[t])>step_size
+
+# Predicate to checks output error is in right range
+error_nom := abs(y[t]-In1[t])<max_error
+error_nn := abs(y_nn[t]-In1[t])<max_error
+error_nn_new := abs(y_nn_new[t]-In1[t])<max_error
+
+# Stabilization after an input/ref step
+stable_nom := ev_[0,interval_length] alw_[0,3] (error_nom)
+stable_nn := ev_[0,interval_length] alw_[0,3] (error_nn)
+stable_nn_new := ev_[0,interval_length] alw_[0,3] (error_nn_new)
+
+# Stabilization after an input/ref step during the entire simulation
+alw_stable_nom := alw_[0,sim_time] stable_nom
+alw_stable_nn := alw_[0,sim_time] stable_nn
+alw_stable_nn_new := alw_[0,sim_time] stable_nn_new
+
+# High level formulas
+phi_nominal :=  stable_nom and alw_[0,sim_time] (step_in1) => (stable_nom)
+phi_nn :=  stable_nn and alw_[0,sim_time](step_in1) => (stable_nn)
+phi_nn_new :=  stable_nn_new and alw_[0,sim_time](step_in1) => (stable_nn_new)

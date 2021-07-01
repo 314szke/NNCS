@@ -1,0 +1,6 @@
+bin/*.mat
+slprj
+**/slprj
+**/slprj/**
+nn.mat
+*.slxc
