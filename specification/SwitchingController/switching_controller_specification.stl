@@ -17,6 +17,6 @@ alw_stable_nn := alw_[0,sim_time] stable_nn
 alw_stable_nn_new := alw_[0,sim_time] stable_nn_new
 
 # High level formulas
-phi_nominal :=  stable_nom and alw_[0,sim_time] (ref_step) => (stable_nom)
-phi_nn :=  stable_nn and alw_[0,sim_time](ref_step) => (stable_nn)
-phi_nn_new :=  stable_nn_new and alw_[0,sim_time](ref_step) => (stable_nn_new)
+phi_nominal :=  stable_nom and alw_[0,sim_time] (ref_step => stable_nom)
+phi_nn :=  stable_nn and alw_[0,sim_time](ref_step => stable_nn)
+phi_nn_new :=  stable_nn_new and alw_[0,sim_time](ref_step => stable_nn_new)
