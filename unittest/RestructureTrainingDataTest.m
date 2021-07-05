@@ -18,19 +18,19 @@ end
 
 function testVaryingArrayLength(testCase)
     REF = [0 1];
-    U = [0];
-    Y = [0];
+    U = 0;
+    Y = 0;
     testCase.verifyError(@()RestructureTrainingData(REF, U, Y), 'RestructureTrainingData:VaryingLength');
 end
 
 function testWithOneElement(testCase)
-    REF = [1];
-    U = [2];
-    Y = [3];
+    REF = 1;
+    U = 2;
+    Y = 3;
     [in, out] = RestructureTrainingData(REF, U, Y);
 
     expected_in = [1; 0; 0; 3; 0; 0];
-    expected_out = [2];
+    expected_out = 2;
     verifyEqual(testCase, in, expected_in);
     verifyEqual(testCase, out, expected_out);
 end

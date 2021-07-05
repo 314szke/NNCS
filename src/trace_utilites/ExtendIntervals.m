@@ -1,7 +1,7 @@
 function outervals = ExtendIntervals(intervals, window_size, max_size)
 %% Parameter checking
 if class(intervals) ~= 'struct'
-    error("The parameter 'intervals' must have type 'struct'!");
+    error("The parameter 'intervals' must have type 'struct' array!");
 end
 fields = fieldnames(intervals);
 if fields{1} ~= 't_begin'

@@ -91,7 +91,7 @@ for iteration = 1:MAX_TEST_ITERATION
 
     fprintf('Retraining time: %0.2f seconds.\n', timer.retrain);
     fprintf('The target training error was %f.\n', training_options.target_error_rate);
-    fprintf('The obtained training error is %f.\n', tr.best_perf);
+    fprintf('The obtained training error is %f.\n', tr.best_tperf);
 
 
     %% Save retrained model
@@ -108,7 +108,7 @@ for iteration = 1:MAX_TEST_ITERATION
 
     %% Save retraining results
     result.retraining_time = timer.retrain;
-    result.training_error = tr.best_perf;
+    result.training_error = tr.best_tperf;
     result.num_cex = num_cex;
     result.remaining_cex = remaining_cex;
     result.data_length = length(data.REF);

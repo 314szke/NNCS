@@ -1,17 +1,17 @@
 function [net, tr] = TrainNeuralNetwork(data, options)
-%% Parameter checking
-if class(data) ~= 'struct'
-    error("The parameter 'data' must have type 'struct'!");
+%% Validate input arguments
+if isstruct(data) == 0
+    error("TrainNeuralNetwork:TypeError", "The argument 'data' must have type 'struct'!");
 end
 fields = fieldnames(data);
-if fields{1} ~= 'REF'
-    error("The parameter 'data' must have a field named 'REF'!");
+if strcmp(fields{1}, 'REF') == 0
+    error("TrainNeuralNetwork:TypeError", "The argument 'data' must have a field named 'REF'!");
 end
-if fields{2} ~= 'U'
-    error("The parameter 'data' must have a field named 'U'!");
+if strcmp(fields{2}, 'U') == 0
+    error("TrainNeuralNetwork:TypeError", "The argument 'data' must have a field named 'U'!");
 end
-if fields{3} ~= 'Y'
-    error("The parameter 'data' must have a field named 'Y'!");
+if strcmp(fields{3}, 'Y') == 0
+    error("TrainNeuralNetwork:TypeError", "The argument 'data' must have a field named 'Y'!");
 end
 
 
@@ -30,7 +30,7 @@ for layer_idx = 1:length(options.neurons)
 end
 
 net.trainParam.max_fail = options.max_validation_checks;
-net.trainParam.goal = options.target_error_rate;
+net.trainParam.goal = options.target_error_"TrainNeuralNetwork:TypeError", rate;
 
 net.performParam.regularization = options.regularization;
 net.performParam.normalization = 'none';

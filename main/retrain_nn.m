@@ -67,7 +67,7 @@ timer.retrain = toc(retraining_timer);
 
 fprintf('Retraining time: %0.2f seconds.\n', timer.retrain);
 fprintf('The target training error was %f.\n', training_options.target_error_rate);
-fprintf('The obtained training error is %f.\n', tr.best_perf);
+fprintf('The obtained training error is %f.\n', tr.best_tperf);
 
 
 %% Save the new neural network
