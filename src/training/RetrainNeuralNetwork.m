@@ -47,35 +47,26 @@ end
 
 %% Retrain the network
 trained_from_scratch = 0;
-net.divideFcn=options.div;
-net.trainParam.goal=options.error;
-net.trainParam.max_fail=options.max_fail;
-
 [new_net, tr] = train(net, in, out);
 
 % We reached validation error limit -> drop learnt weights and biases
-if tr.best_vperf > options.error_threshold
-    fprintf('The validation error %f is higher than the given threshold %f.\n', tr.best_vperf, options.error_threshold);
+if tr.best_perf > options.error_threshold
+    fprintf('The test error %f is higher than the given threshold %f.\n', tr.best_perf, options.error_threshold);
     fprintf('2.1) Retrain with counter-examples from scratch.\n');
 
-    net = feedforwardnet(options.neurons);
-    net = configure(net, in, out);
-    net = init(net);
+    training_data.REF = REF;
+    training_data.U = U;
+    training_data.Y = Y;
 
-    trained_from_scratch = 1;
-    net.divideFcn=options.div;
-    net.trainParam.goal=options.error;
-    net.trainParam.max_fail=options.max_fail;
+    [new_net2, tr2] = TrainNeuralNetwork(training_data, options);
 
-    [new_net2, tr2] = train(net, in, out);
-
-    if tr2.best_vperf < tr.best_vperf
-        fprintf('The new validation error %f is lower than the previous error %f.\n', tr2.best_vperf, tr.best_vperf);
+    if tr2.best_perf < tr.best_perf
+        fprintf('The new test error %f is lower than the previous error %f.\n', tr2.best_perf, tr.best_perf);
         fprintf('Use NN from second retraining with newly learnt weights.\n');
         new_net = new_net2;
         tr = tr2;
     else
-        fprintf('Retraining from scratch did not result in lower validation error (%f).\n', tr2.best_vperf);
+        fprintf('Retraining from scratch did not result in lower validation error (%f).\n', tr2.best_perf);
         fprintf('Use NN from first retraining keeping the learnt weights.\n');
     end
 end
