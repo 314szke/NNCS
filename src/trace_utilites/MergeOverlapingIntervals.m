@@ -1,14 +1,18 @@
 function outervals = MergeOverlapingIntervals(intervals)
-%% Parameter checking
-if class(intervals) ~= 'struct'
-    error("The parameter 'intervals' must have type 'struct'!");
+%% Validate input arguments
+if isempty(intervals)
+    outervals = [];
+    return;
+end
+if isstruct(intervals) == 0
+    error("MergeOverlapingIntervals:TypeError", "The parameter 'intervals' must have type 'struct' array!");
 end
 fields = fieldnames(intervals);
-if fields{1} ~= 't_begin'
-    error("The parameter 'intervals' must have a field named 't_begin'!");
+if strcmp(fields{1}, 't_begin') == 0
+    error("MergeOverlapingIntervals:TypeError", "The parameter 'intervals' must have a field named 't_begin'!");
 end
-if fields{2} ~= 't_end'
-    error("The parameter 'intervals' must have a field named 't_end'!");
+if strcmp(fields{2}, 't_end') == 0
+    error("MergeOverlapingIntervals:TypeError", "The parameter 'intervals' must have a field named 't_end'!");
 end
 
 
@@ -16,6 +20,8 @@ end
 table = struct2table(intervals);
 unique_sorted_table = unique(table, 'rows', 'sort');
 sorted_intervals = table2struct(unique_sorted_table);
+% table2struct converts an array with n structs to nx1 shape, where 1xn is expected
+sorted_intervals = reshape(sorted_intervals, [1, numel(sorted_intervals)]);
 
 
 %% Merge overlaping intervals
@@ -30,8 +36,8 @@ for idx = 2:numel(sorted_intervals)
         % Invalidate merged interval
         sorted_intervals(idx).t_begin = -1;
     else
-        % Continue to the next non-overlapping interval
-        last_idx = idx + 1;
+        % The interval was not merged, so it is the new last interval
+        last_idx = idx;
     end
 end
 
