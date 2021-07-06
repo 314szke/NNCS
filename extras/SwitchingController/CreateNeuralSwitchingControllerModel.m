@@ -1,10 +1,10 @@
 function model = CreateNeuralSwitchingControllerModel(model_path, options)
-%% Parameter checking
-if class(model_path) ~= 'char'
-    error("The parameter 'model_path' must have type 'char' array!");
+%% Validate input arguments
+if isa(model_path, 'char') == 0
+    error("CreateNeuralSwitchingControllerModel:TypeError", "The parameter 'model_path' must have type 'char' array!");
 end
-if class(options) ~= 'struct'
-    error("The parameter 'options' must have type 'struct'!");
+if isstruct(options) == 0
+    error("CreateNeuralSwitchingControllerModel:TypeError", "The parameter 'options' must have type 'struct'!");
 end
 
 

@@ -1,26 +1,34 @@
-%% Configure Nikos options structure
-options.sim_cov =  0;
-options.sim_ref = 0;
-options.ref_Ts = 20;
-options.input_choice = 4; % ensures Nikos model takes breach signal as inputs
+%% Initialize workspace and set execution parameters
+Initialize
+clear; close all; clc; bdclose('all');
+
+% Simulink parameters
+simulation.time_window = 20;
+simulation.time_step = 0.01;
 
 
 %% Config Breach interface
-Bnom = BreachSimulinkSystem('switching_controller_nominal', {}); % second argument means we don't care about parameters in the model other than input signals
-Bnom.SetInputGen('UniStep2');
-load_system('switching_controller_nominal_breach');
-set_param('switching_controller_nominal_breach', 'FastRestart', 'on');
+model_path = 'models/SwitchingController';
+nominal_model_path = sprintf('%s/switching_controller_nominal', model_path);
+nominal_model = CreateModel(nominal_model_path);
+nominal_model.SetInputGen('UniStep2');
+input_parameters = nominal_model.expand_param_name('ref_u.+');
+nominal_model.SetParamRanges(input_parameters, [0 1]);
 
-%% Inputs
-input_params = Bnom.expand_param_name('ref_u.+'); % get all amplitude input parameters
-Bnom.SetParamRanges(input_params, [0 1]);
 
-%% Requirements
- STL_ReadFile('specs_tutorial_new.stl');
- Rnom = BreachRequirement(alw_stable_nom);
+%% Evaluate requirement on 100 quasi random traces
+STL_ReadFile('specification/SwitchingController/switching_controller_specification.stl');
+stl_options.segments = 2;
+stl_options.step_size = 0.01;
+stl_options.max_error = 0.01;
+nominal_requirement = GetSwitchingControllerRequirement(alw_stable_nom, simulation, stl_options);
 
-%%  Evaluate requirement on 100 quasi random traces
-Bnom.QuasiRandomSample(100);
-Rnom.Eval(Bnom)
-BreachSamplesPlot(Rnom)
+nominal_model.QuasiRandomSample(100);
+nominal_requirement.Eval(nominal_model);
 
+
+%% Show results
+disp(nominal_requirement);
+P = BreachSamplesPlot(nominal_requirement);
+P.set_y_axis('ref_u1');
+P.set_x_axis('ref_u0');

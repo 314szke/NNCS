@@ -1,33 +1,34 @@
-%% Configure Nikos options structure
-options.dt=0.005;
-options.ref_min=-0.5;
-options.ref_max=0.5;
-options.sim_cov =  0;
-options.sim_ref = 0;
-options.ref_Ts = 20;
-options.T_train = 40;
-options.input_choice = 3; % ensures Nikos model takes breach signal as inputs
+%% Initialize workspace and set execution parameters
+Initialize
+clear; close all; clc; bdclose('all');
+
+% Simulink parameters
+simulation.time_window = 20;
+simulation.time_step = 0.01;
+
 
 %% Config Breach interface
-Bnn = BreachSimulinkSystem('switching_controller_nn', {}); % second argument means we don't care about parameters in the model other than input signals
-Bnn.SetInputGen('UniStep2');
-load_system('switching_controller_nn_breach');
-set_param('switching_controller_nn_breach', 'FastRestart', 'on');
+model_path = 'models/SwitchingController';
+nn_model_path = sprintf('%s/switching_controller_nn', model_path);
+nn_model = CreateModel(nn_model_path);
+nn_model.SetInputGen('UniStep2');
+input_parameters = nn_model.expand_param_name('ref_u.+');
+nn_model.SetParamRanges(input_parameters, [0 1]);
 
-%% Inputs
-input_params = Bnn.expand_param_name('ref_u.+'); % get all amplitude input parameters
-Bnn.SetParamRanges(input_params, [0 1]);
 
-%% Requirements
- STL_ReadFile('specs_tutorial_new.stl');
- Rnn = BreachRequirement(alw_stable_nn);
+%% Evaluate the requirement on 100 quasi random traces
+STL_ReadFile('specification/SwitchingController/switching_controller_specification.stl');
+stl_options.segments = 2;
+stl_options.step_size = 0.01;
+stl_options.max_error = 0.01;
+requirement = GetSwitchingControllerRequirement(alw_stable_nn, simulation, stl_options);
 
-%%  Evaluate requirement on 100 quasi random traces
-Bnn.QuasiRandomSample(100);
-Rnn.Eval(Bnn);
+nn_model.QuasiRandomSample(100);
+requirement.Eval(nn_model);
 
-%% Show result
-disp(Rnn)
-P = BreachSamplesPlot(Rnn);
-P.set_y_axis('ref_u1')
-P.set_x_axis('ref_u0')
+
+%% Show results
+disp(requirement);
+P = BreachSamplesPlot(requirement);
+P.set_y_axis('ref_u1');
+P.set_x_axis('ref_u0');
