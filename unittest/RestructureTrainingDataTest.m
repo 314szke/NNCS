@@ -42,7 +42,7 @@ function testWithTwoElements(testCase)
     [in, out] = RestructureTrainingData(REF, U, Y);
 
     expected_in = [[1 2]; [0 1]; [0 0]; [5 6]; [0 5]; [0 0]];
-    expected_out = [3 4];
+    expected_out = [3; 4];
     verifyEqual(testCase, in, expected_in);
     verifyEqual(testCase, out, expected_out);
 end
@@ -54,7 +54,7 @@ function testWithMultipleElements(testCase)
     [in, out] = RestructureTrainingData(REF, U, Y);
 
     expected_in = [[1 2 3 4]; [0 1 2 3]; [0 0 1 2]; [9 10 11 12]; [0 9 10 11]; [0 0 9 10]];
-    expected_out = [5 6 7 8];
+    expected_out = [5; 6; 7; 8];
     verifyEqual(testCase, in, expected_in);
     verifyEqual(testCase, out, expected_out);
 end

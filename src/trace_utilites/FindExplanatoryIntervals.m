@@ -40,7 +40,7 @@ for trace_idx = 1:num_traces
 
     intervals = MergeOverlapingIntervals(intervals);
     intervals_per_trace{trace_idx} = intervals;
-    all_intervals = [all_intervals; intervals];
+    all_intervals = [all_intervals intervals];
 end
 
 

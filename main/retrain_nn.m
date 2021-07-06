@@ -36,7 +36,7 @@ nn_new_requirement = GetSwitchingControllerRequirement(phi_nn_new, simulation, s
 
 % Setup parameters for retraining
 options.num_falsification_traces = 100;
-options.use_positive_diagnosis = 1;
+options.use_positive_diagnosis = 0;
 options.window_size = 4;
 options.cex_threshold = 5;
 options.plot = 1;
