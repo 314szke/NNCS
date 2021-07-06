@@ -1,20 +1,20 @@
 function values = ExtractIntervalValues(trace_values, time_values, intervals)
-%% Parameter checking
-if class(trace_values) ~= 'double'
-    error("The parameter 'trace_values' must have type 'double' array!");
+%% Validate input arguments
+if isa(trace_values, 'double') == 0
+    error("ExtractIntervalValues:TypeError", "The parameter 'trace_values' must have type 'double' array!");
 end
-if class(time_values) ~= 'double'
-    error("The parameter 'time_values' must have type 'double' array!");
+if isa(time_values, 'double') == 0
+    error("ExtractIntervalValues:TypeError", "The parameter 'time_values' must have type 'double' array!");
 end
-if class(intervals) ~= 'struct'
-    error("The parameter 'intervals' must have type 'struct'!");
+if isstruct(intervals) == 0
+    error("ExtractIntervalValues:TypeError", "The parameter 'intervals' must have type 'struct'!");
 end
 fields = fieldnames(intervals);
-if fields{1} ~= 't_begin'
-    error("The parameter 'intervals' must have a field named 't_begin'!");
+if strcmp(fields{1}, 't_begin') == 0
+    error("ExtractIntervalValues:TypeError", "The parameter 'intervals' must have a field named 't_begin'!");
 end
-if fields{2} ~= 't_end'
-    error("The parameter 'intervals' must have a field named 't_end'!");
+if strcmp(fields{2}, 't_end') == 0
+    error("ExtractIntervalValues:TypeError", "The parameter 'intervals' must have a field named 't_end'!");
 end
 
 
@@ -22,15 +22,15 @@ end
 values = [];
 interval_idx = 1;
 
-for idx = 1:numel(time_values)
+for idx = 1:length(time_values)
     if time_values(idx) > intervals(interval_idx).t_end
         interval_idx = interval_idx + 1;
-        if interval_idx > numel(intervals)
+        if interval_idx > length(intervals)
             break;
         end
     end
     if time_values(idx) >= intervals(interval_idx).t_begin
-        values = [values, trace_values(idx)];
+        values = [values trace_values(idx)];
     end
 end
 
