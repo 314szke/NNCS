@@ -30,7 +30,7 @@ for layer_idx = 1:length(options.neurons)
 end
 
 net.trainParam.max_fail = options.max_validation_checks;
-net.trainParam.goal = options.target_error_"TrainNeuralNetwork:TypeError", rate;
+net.trainParam.goal = options.target_error_rate;
 
 net.performParam.regularization = options.regularization;
 net.performParam.normalization = 'none';

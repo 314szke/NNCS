@@ -1,5 +1,7 @@
 %% Initialize workspace and set execution parameters
 Initialize
+% Some parameters are used for the phi_* requirements
+warning('off', 'SetParam:param_not_in_list');
 clear; close all; clc; bdclose('all');
 
 % Simulink parameters

@@ -14,7 +14,7 @@ end
 %% Create a six dimensional vector with 3 reference and 3 Y values
 if length(REF) == 1
     in = [REF; 0; 0; Y; 0; 0];
-    out = U;
+    out = U';
     return;
 end
 
@@ -37,6 +37,6 @@ for idx = 3:length(REF)
 end
 
 in = [in1; in2; in3; in4; in5; in6];
-out = U;
+out = U';
 
 end

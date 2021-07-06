@@ -19,8 +19,8 @@ nn_models{3}.path = parallel_model_after_retraining_path;
 nn_models{3}.block_name = 'nn_old';
 
 % Simulink parameters
-simulation.time_window = 40;
-simulation.time_step = 0.005;
+simulation.time_window = 20;
+simulation.time_step = 0.01;
 
 % Create required models
 nominal_model = CreateModel(nominal_model_path);
@@ -31,7 +31,7 @@ coverage_options.max = 1;
 coverage_options.cell_size = 0.2;
 coverage_options.dimension = 2;
 coverage_options.coverage_point_type = 'random';
-coverage_options.plot = 1;
+coverage_options.plot = 0;
 
 % Training parameters
 training_options.neurons = [20 10];
@@ -60,7 +60,7 @@ timer.train = toc(training_timer);
 
 fprintf('Training time: %0.2f seconds.\n', timer.train);
 fprintf('The target training error was %f.\n', training_options.target_error_rate);
-fprintf('The obtained training error is %f.\n', tr.best_perf);
+fprintf('The obtained training error is %f.\n', tr.best_tperf);
 
 
 %% Save the neural network
