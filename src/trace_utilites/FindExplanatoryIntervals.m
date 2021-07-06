@@ -46,7 +46,8 @@ end
 
 %% Find unique intervals and count number of occurences
 if isempty(all_intervals)
-    unique_intervals = {};
+    unique_intervals.intervals = [];
+    unique_intervals.occurrences = [];
 else
     table = struct2table(all_intervals);
     [unique_table, ~, ic] = unique(table, 'rows', 'sort');

@@ -10,12 +10,12 @@ fields = fieldnames(unique_intervals);
 if strcmp(fields{1}, 'intervals') == 0
     error("FindUniqueTraces:TypeError", "The parameter 'unique_intervals' must have a field named 'intervals'!");
 end
-if isstruct(unique_intervals.intervals) == 0
-    error("FindUniqueTraces:TypeError", "The parameter 'unique_intervals.intervals' must have type 'struct' array!");
-end
 if isempty(trace_intervals) || isempty(unique_intervals.intervals)
     unique_trace_indexes = [];
     return;
+end
+if isstruct(unique_intervals.intervals) == 0
+    error("FindUniqueTraces:TypeError", "The parameter 'unique_intervals.intervals' must have type 'struct' array!");
 end
 
 

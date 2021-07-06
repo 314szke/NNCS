@@ -6,6 +6,10 @@ end
 if isa(time_values, 'double') == 0
     error("ExtractIntervalValues:TypeError", "The parameter 'time_values' must have type 'double' array!");
 end
+if isempty(intervals)
+    values = [];
+    return;
+end
 if isstruct(intervals) == 0
     error("ExtractIntervalValues:TypeError", "The parameter 'intervals' must have type 'struct'!");
 end
