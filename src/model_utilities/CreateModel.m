@@ -1,5 +1,5 @@
 function model = CreateModel(model_path)
-if isa(model_path, 'char')
+if isa(model_path, 'char') == 0
     error("CreateModel:TypeError", "The parameter 'model_path' must have type 'char' array!");
 end
 

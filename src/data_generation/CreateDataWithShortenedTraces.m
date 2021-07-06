@@ -1,19 +1,19 @@
 function data = CreateDataWithShortenedTraces(model, evaluation_result, trace_intervals, unique_trace_indexes, window_size)
-%% Parameter checking
-if class(model) ~= "BreachSimulinkSystem"
-    error("The parameter 'model' must have type 'BreachSimulinkSystem'!");
+%% Validate input arguments
+if isa(model, 'BreachSimulinkSystem') == 0
+    error("CreateDataWithCompleteTraces:TypeError", "The parameter 'model' must have type 'BreachSimulinkSystem'!");
 end
-if class(evaluation_result) ~= "BreachRequirement"
-    error("The parameter 'evaluation_result' must have type 'BreachRequirement'!");
+if isa(evaluation_result, 'BreachRequirement') == 0
+    error("CreateDataWithCompleteTraces:TypeError", "The parameter 'evaluation_result' must have type 'BreachRequirement'!");
 end
-if class(trace_intervals) ~= 'cell'
-    error("The parameter 'trace_intervals' must have type 'cell' array!");
+if isa(trace_intervals, 'cell') == 0
+    error("CreateDataWithCompleteTraces:TypeError", "The parameter 'trace_intervals' must have type 'cell' array!");
 end
-if class(unique_trace_indexes) ~= 'double'
-    error("The parameter 'unique_trace_indexes' must have type 'double' array!");
+if isa(unique_trace_indexes, 'double') == 0
+    error("CreateDataWithCompleteTraces:TypeError", "The parameter 'unique_trace_indexes' must have type 'double' array!");
 end
-if class(window_size) ~= 'double'
-    error("The parameter 'window_size' must have type 'double'!");
+if isa(window_size, 'double') == 0
+    error("CreateDataWithCompleteTraces:TypeError", "The parameter 'window_size' must have type 'double'!");
 end
 
 
@@ -25,7 +25,7 @@ y_values = [];
 time_values = evaluation_result.GetTime();
 max_time = time_values(end);
 
-for trace_idx = 1:numel(unique_trace_indexes)
+for trace_idx = 1:length(unique_trace_indexes)
     intervals = trace_intervals{unique_trace_indexes(trace_idx)};
     intervals = ExtendIntervals(intervals, window_size, max_time);
 

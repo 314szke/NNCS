@@ -1,28 +1,28 @@
 function data = GenerateInputCoverageData(model, options)
-%% Parameter checking
-if class(model) ~= "BreachSimulinkSystem"
+%% Validate input arguments
+if isa(model, 'BreachSimulinkSystem') == 0
     error("The parameter 'model' must have type 'BreachSimulinkSystem'!");
 end
-if class(options) ~= 'struct'
+if isstruct(options) == 0
     error("The parameter 'options' must have type 'struct'!");
 end
 fields = fieldnames(options);
-if fields{1} ~= 'min'
+if strcmp(fields{1}, 'min') == 0
     error("The parameter 'options' must have a field named 'min'!");
 end
-if fields{2} ~= 'max'
+if strcmp(fields{2}, 'max') == 0
     error("The parameter 'options' must have a field named 'max'!");
 end
-if fields{3} ~= 'cell_size'
+if strcmp(fields{3}, 'cell_size') == 0
     error("The parameter 'options' must have a field named 'cell_size'!");
 end
-if fields{4} ~= 'dimension'
+if strcmp(fields{4}, 'dimension') == 0
     error("The parameter 'options' must have a field named 'dimension'!");
 end
-if fields{5} ~= 'coverage_point_type'
+if strcmp(fields{5}, 'coverage_point_type') == 0
     error("The parameter 'options' must have a field named 'coverage_point_type'!");
 end
-if fields{6} ~= 'plot'
+if strcmp(fields{6}, 'plot') == 0
     error("The parameter 'options' must have a field named 'plot'!");
 end
 

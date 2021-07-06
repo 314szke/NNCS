@@ -1,19 +1,22 @@
 function [complete_new_data, shortened_new_data, num_cex, cex_traces] = GenerateCounterExampleData(nn_model, nominal_model, plot_model, nn_requirement, nominal_requirement, plot_labels, options)
-%% Parameter checking
-if class(nn_model) ~= "BreachSimulinkSystem"
-    error("The parameter 'nn_model' must have type 'BreachSimulinkSystem'!");
+%% Validate input arguments
+if isa(nn_model, 'BreachSimulinkSystem') == 0
+    error("GenerateCounterExampleData:TypeError", "The parameter 'nn_model' must have type 'BreachSimulinkSystem'!");
 end
-if class(nominal_model) ~= "BreachSimulinkSystem"
-    error("The parameter 'nominal_model' must have type 'BreachSimulinkSystem'!");
+if isa(nominal_model, 'BreachSimulinkSystem') == 0
+    error("GenerateCounterExampleData:TypeError", "The parameter 'nominal_model' must have type 'BreachSimulinkSystem'!");
 end
-if class(plot_model) ~= "BreachSimulinkSystem"
-    error("The parameter 'plot_model' must have type 'BreachSimulinkSystem'!");
+if isa(plot_model, 'BreachSimulinkSystem') == 0
+    error("GenerateCounterExampleData:TypeError", "The parameter 'plot_model' must have type 'BreachSimulinkSystem'!");
 end
-if class(nn_requirement) ~= "BreachRequirement"
-    error("The parameter 'nn_requirement' must have type 'BreachRequirement'!");
+if isa(nn_requirement, 'BreachRequirement') == 0
+    error("GenerateCounterExampleData:TypeError", "The parameter 'nn_requirement' must have type 'BreachRequirement'!");
 end
-if class(nominal_requirement) ~= "BreachRequirement"
-    error("The parameter 'nominal_requirement' must have type 'BreachRequirement'!");
+if isa(nominal_requirement, 'BreachRequirement') == 0
+    error("GenerateCounterExampleData:TypeError", "The parameter 'nominal_requirement' must have type 'BreachRequirement'!");
+end
+if isa(plot_labels, 'cell') == 0
+    error("GenerateCounterExampleData:TypeError", "The parameter 'plot_labels' must have type 'cell' array!");
 end
 
 
@@ -24,10 +27,10 @@ f_problem.StopAtFalse = false;
 f_problem.max_obj_eval = options.num_falsification_traces;
 f_problem.setup_quasi_random('quasi_rand_seed', 1976, 'num_quasi_rand_samples', options.num_falsification_traces);
 f_problem.solve();
-
 falsification_result = f_problem.GetFalse();
 
-% Initialize return variables to empty
+
+%% Initialize return variables to empty
 complete_new_data = {};
 shortened_new_data = {};
 num_cex = 0;

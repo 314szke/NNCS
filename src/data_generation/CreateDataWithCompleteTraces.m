@@ -1,10 +1,10 @@
 function data = CreateDataWithCompleteTraces(model, num_traces)
-%% Parameter checking
-if class(model) ~= "BreachSimulinkSystem"
-    error("The parameter 'model' must have type 'BreachSimulinkSystem'!");
+%% Validate input arguments
+if isa(model, 'BreachSimulinkSystem') == 0
+    error("CreateDataWithCompleteTraces:TypeError", "The parameter 'model' must have type 'BreachSimulinkSystem'!");
 end
-if class(num_traces) ~= 'double'
-    error("The parameter 'num_traces' must have type 'double' array!");
+if isa(num_traces, 'double') == 0
+    error("CreateDataWithCompleteTraces:TypeError", "The parameter 'num_traces' must have type 'double'!");
 end
 
 
