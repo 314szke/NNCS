@@ -1,6 +1,6 @@
 function model = CreateModel(model_path)
-if class(model_path) ~= "char"
-    error("The parameter 'model_path' must have type 'char'!");
+if isa(model_path, 'char')
+    error("CreateModel:TypeError", "The parameter 'model_path' must have type 'char' array!");
 end
 
 [~, model_name, ~] = fileparts(model_path);

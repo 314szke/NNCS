@@ -1,13 +1,13 @@
 function UpdateNeuralNetwork(net, model_path, block_name)
-%% Parameter checking
-if class(net) ~= 'network'
-    error("The parameter 'net' must have type 'network'!");
+%% Validate input arguments
+if isa(net, 'network')
+    error("UpdateNeuralNetwork:TypeError", "The parameter 'net' must have type 'network'!");
 end
-if class(model_path) ~= "char"
-    error("The parameter 'model_path' must have type 'char'!");
+if isa(model_path, 'char')
+    error("UpdateNeuralNetwork:TypeError", "The parameter 'model_path' must have type 'char' array!");
 end
-if class(block_name) ~= "char"
-    error("The parameter 'block_name' must have type 'char'!");
+if isa(block_name, 'char')
+    error("UpdateNeuralNetwork:TypeError", "The parameter 'block_name' must have type 'char' array!");
 end
 
 
