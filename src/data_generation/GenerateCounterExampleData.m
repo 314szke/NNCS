@@ -67,7 +67,8 @@ cex_traces = BuildTraceSystem(falsification_result, cex_intervals, unique_cex_tr
 if nominal_cex ~= 0
     fprintf('ERROR: The nominal controller could not correct the behaviour of the NN controller!\n');
     if options.plot == 1
-        PlotModel(plot_model, evaluation_result, nominal_requirement, plot_labels);
+        plot_requirement = nominal_requirement.copy();
+        PlotModel(plot_model, evaluation_result, plot_requirement, plot_labels);
     end
 end
 
