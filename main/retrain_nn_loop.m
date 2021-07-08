@@ -16,18 +16,19 @@ new_nn_models{1}.path = nn_model_retrained_path;
 new_nn_models{1}.block_name = 'nn';
 
 % Update the models with the network in the workspace and create the required models
-for idx = 1:numel(nn_models)
+for idx = 1:length(nn_models)
     UpdateNeuralNetwork(net, nn_models{idx}.path, nn_models{idx}.block_name);
 end
 nominal_model = CreateModel(nominal_model_path);
 nn_model = CreateNeuralSwitchingControllerModel(nn_model_path, coverage_options);
+plot_model1 = CreateModel(parallel_model_before_retraining_path);
 % IMPORTANT: the retrained models are created at the final verification step!
 
 % Setup the STL requirements
 STL_ReadFile('specification/SwitchingController/switching_controller_specification.stl');
 stl_options.segments = coverage_options.dimension;
 stl_options.step_size = 0.01;
-stl_options.max_error = 0.01;
+stl_options.max_error = 0.04;
 
 nominal_requirement = GetSwitchingControllerRequirement(phi_nominal, simulation, stl_options);
 nn_requirement = GetSwitchingControllerRequirement(phi_nn, simulation, stl_options);
@@ -41,27 +42,30 @@ options.cex_threshold = CEX_THRESHOLD;
 options.plot = 0;
 
 % Other parameters
-training_options.error_threshold = VALIDATION_ERROR_THRESHOLD;
-training_options.use_all_data = 1;
+training_options.error_threshold = RETRAINING_ERROR_THRESHOLD;
+training_options.use_all_data = USE_ALL_DATA_FOR_RETRAINING;
 rng(1976); % random generator seed for Matlab
+plot_labels1 = {'ref', 'u', 'u_nn', 'y', 'y_nn'};
+plot_labels2 = {'ref', 'u', 'u_nn_old', 'u_nn_new', 'y', 'y_nn_old', 'y_nn_new'};
 
 
 %% Retraining until no counter examples are remaining or the iteration limit is not reached
 results = {};
-for iteration = 1:MAX_TEST_ITERATION
+for iteration = 1:MAX_EXPERIMENT_ITERATION
     %% Setup iteration
-    fprintf('# Retraining iteration %d/%d.\n', iteration, MAX_TEST_ITERATION);
+    fprintf('# Retraining iteration %d/%d.\n', iteration, MAX_EXPERIMENT_ITERATION);
     close all; bdclose('all');
     clear result;
 
     result.environment = SAVED_ENVIRONMENT;
+    result.max_iteration = MAX_EXPERIMENT_ITERATION;
     result.shortened_cex = SHORTENED_CEX;
     result.use_positive_diagnosis = USE_POSITIVE_DIAGNOSIS;
     result.accumulate_cex = ACCUMULATE_CEX;
     result.cex_threshold = CEX_THRESHOLD;
-    result.validation_error_threshold = VALIDATION_ERROR_THRESHOLD;
+    result.retraining_error_threshold = RETRAINING_ERROR_THRESHOLD;
     result.window_size = WINDOW_SIZE;
-    result.use_all_data = training_options.use_all_data;
+    result.use_all_data = USE_ALL_DATA_FOR_RETRAINING;
 
 
     %% Falsification
@@ -76,7 +80,13 @@ for iteration = 1:MAX_TEST_ITERATION
 
     if isempty(new_data)
         fprintf('No counter-examples found, the retraining stops.\n');
+        result.retraining_time = 0;
+        result.training_error = 0;
         result.num_cex = 0;
+        result.remaining_cex = 0;
+        result.data_length = length(data.REF);
+        result.cex_length = 0;
+        result.trained_from_scratch = 0;
         results{end+1} = result;
         break;
     end
@@ -96,12 +106,12 @@ for iteration = 1:MAX_TEST_ITERATION
 
     %% Save retrained model
     fprintf('3) Update the Simulink models.\n');
-    for idx = 1:numel(new_nn_models)
+    for idx = 1:length(new_nn_models)
         UpdateNeuralNetwork(net, new_nn_models{idx}.path, new_nn_models{idx}.block_name);
     end
 
 
-    %% Test if the counter examples disappeared
+    %% Verify if the counter examples disappeared
     fprintf('4) Verify if counter-examples are eliminated.\n');
     nn_retrained_model = CreateModel(nn_model_retrained_path);
     [~, ~, remaining_cex] = EvaluateModel(nn_retrained_model, cex_traces, nn_requirement);
@@ -126,11 +136,11 @@ for iteration = 1:MAX_TEST_ITERATION
 
 
     %% Update simulink models for next iteration
-    for idx = 1:numel(nn_models)
+    for idx = 1:length(nn_models)
         UpdateNeuralNetwork(net, nn_models{idx}.path, nn_models{idx}.block_name);
     end
 end
 
 
 %% Save execution
-save(TEST_NAME);
+save(EXPERIMENT_NAME);

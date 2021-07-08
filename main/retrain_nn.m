@@ -16,7 +16,7 @@ new_nn_models{2}.path = parallel_model_after_retraining_path;
 new_nn_models{2}.block_name = 'nn_old';
 
 % Update the models with the network in the workspace and create the required models
-for idx = 1:numel(nn_models)
+for idx = 1:length(nn_models)
     UpdateNeuralNetwork(net, nn_models{idx}.path, nn_models{idx}.block_name);
 end
 nominal_model = CreateModel(nominal_model_path);
@@ -28,7 +28,7 @@ plot_model1 = CreateModel(parallel_model_before_retraining_path);
 STL_ReadFile('specification/SwitchingController/switching_controller_specification.stl');
 stl_options.segments = coverage_options.dimension;
 stl_options.step_size = 0.01;
-stl_options.max_error = 0.01;
+stl_options.max_error = 0.04;
 
 nominal_requirement = GetSwitchingControllerRequirement(phi_nominal, simulation, stl_options);
 nn_requirement = GetSwitchingControllerRequirement(phi_nn, simulation, stl_options);
@@ -39,7 +39,7 @@ options.num_falsification_traces = 100;
 options.use_positive_diagnosis = 0;
 options.window_size = 4;
 options.cex_threshold = 5;
-options.plot = 1;
+options.plot = 0;
 
 % Other parameters
 training_options.error_threshold = 0.1;
@@ -72,7 +72,7 @@ fprintf('The obtained training error is %f.\n', tr.best_tperf);
 
 %% Save the new neural network
 fprintf('3) Update the Simulink models.\n');
-for idx = 1:numel(new_nn_models)
+for idx = 1:length(new_nn_models)
     UpdateNeuralNetwork(net, new_nn_models{idx}.path, new_nn_models{idx}.block_name);
 end
 

@@ -22,8 +22,8 @@ nominal_model.SetParamRanges(input_parameters, [0 1]);
 STL_ReadFile('specification/SwitchingController/switching_controller_specification.stl');
 stl_options.segments = 2;
 stl_options.step_size = 0.01;
-stl_options.max_error = 0.01;
-nominal_requirement = GetSwitchingControllerRequirement(alw_stable_nom, simulation, stl_options);
+stl_options.max_error = 0.04;
+nominal_requirement = GetSwitchingControllerRequirement(phi_nominal, simulation, stl_options);
 
 nominal_model.QuasiRandomSample(100);
 nominal_requirement.Eval(nominal_model);

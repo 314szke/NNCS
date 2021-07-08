@@ -22,7 +22,7 @@ nn_model.SetParamRanges(input_parameters, [0 1]);
 STL_ReadFile('specification/SwitchingController/switching_controller_specification.stl');
 stl_options.segments = 2;
 stl_options.step_size = 0.01;
-stl_options.max_error = 0.01;
+stl_options.max_error = 0.04;
 requirement = GetSwitchingControllerRequirement(alw_stable_nn, simulation, stl_options);
 
 nn_model.QuasiRandomSample(100);
