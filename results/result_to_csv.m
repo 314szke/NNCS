@@ -1,22 +1,41 @@
-window_sizes = [2 4 8];
-ids = [1 3];
+%% Initialize
+Initialize
+clear; close all; clc; bdclose('all');
 
-for idx3 = 1:numel(ids)
-    workspace_name = sprintf('results/test%d_0_complete.mat', ids(idx3));
-    load(workspace_name);
-    for idx4 = 1:numel(results)
-        result = results{idx4};
-        fprintf('%d;%d;%d;%f;%f;%f;%d;%d;%d\n', ids(idx3), result.shortened_cex, result.window_size, result.retraining_time, result.training_error, result.validation_error, result.num_cex, result.remaining_cex, idx4);
+
+%% Convert experiment results to CSV format
+files = dir('results/experiment*');
+fileID = fopen('results/results.csv','w');
+fprintf(fileID, 'BinaryName;IterationID;MaxIteration;CexThreshold;NumCex;RemainingCex;WindowSize;ShortenedCex;AccumulateCex;UsePositiveDiagnosis;UseAllDataForRetraining;RetrainingErrorThreshold;RetrainingTime;TrainingError;TrainedFromScratch;DataLength;CexLength\n');
+
+for file_idx = 1:length(files)
+    file_name = files(file_idx).name;
+    load(file_name);
+    
+    for result_idx = 1:length(results)
+        result = results{result_idx};
+        fprintf(fileID, '%s;%d;%d;%d;%d;%d;%0.2f;%d;%d;%d;%d;%0.4f;%0.4f;%0.6f;%d;%d;%d\n', ...
+            result.environment, ...
+            result_idx, ...
+            result.max_iteration, ...
+            result.cex_threshold, ...
+            result.num_cex, ...
+            result.remaining_cex, ...
+            result.window_size, ...
+            result.shortened_cex, ...
+            result.accumulate_cex, ...
+            result.use_positive_diagnosis, ...
+            result.use_all_data, ...
+            result.retraining_error_threshold, ...
+            result.retraining_time, ...
+            result.training_error, ...
+            result.trained_from_scratch, ...
+            result.data_length, ...
+            result.cex_length);
     end
+    
+    clear result;
     clear results;
-
-    for idx5 = 1:numel(window_sizes)
-        workspace_name = sprintf('results/test%d_%d_shortened.mat', ids(idx3), window_sizes(idx5));
-        load(workspace_name);
-        for idx4 = 1:numel(results)
-            result = results{idx4};
-            fprintf('%d;%d;%d;%f;%f;%f;%d;%d;%d\n', ids(idx3), result.shortened_cex, result.window_size, result.retraining_time, result.training_error, result.validation_error, result.num_cex, result.remaining_cex, idx4);
-        end
-        clear results;
-    end
 end
+
+fclose(fileID);

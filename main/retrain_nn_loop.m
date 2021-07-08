@@ -116,6 +116,7 @@ for iteration = 1:MAX_EXPERIMENT_ITERATION
     nn_retrained_model = CreateModel(nn_model_retrained_path);
     [~, ~, remaining_cex] = EvaluateModel(nn_retrained_model, cex_traces, nn_requirement);
 
+    
     %% Save retraining results
     result.retraining_time = timer.retrain;
     result.training_error = tr.best_tperf;
