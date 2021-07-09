@@ -1,26 +1,56 @@
-# Neural Network Control Systems
+# Framework to Create Neural Network Control Systems
 
-### 1) Initial steps
+This repository is based on [NNCS_matlab](https://github.com/nikos-kekatos/NNCS_matlab). It provides features to create, train and retrain neural network controllers to mimic given nominal controllers. The project provides methods to analyse the performance of the neural network controllers with respect to safety properties of the controlled system using formal verification tools of Breach.
 
-### 2) Create and train neural network controllers
-### 3) Experiments
+## Getting started
+### Prerequisites
+
+The project was developed using Matlab (R2020a) and the latest version of [Breach](https://bitbucket.org/decyphir/breach-dev/src/master/).
+
+### Installation
+
+No installation required, the project is ready to use after cloning. The **Initialize.m** function adds the project to the Matlab path and initializes Breach. The function assumes that the repository location is next to Breach.
+
+    <your_folder>
+        |
+        |_ breach/
+        |_ NNCS/
+
+
+The path to Breach can be changed in the **Initialize.m** function.
+### Repository structure
+
+
+## Adding a new use case
+
+## Experiments
+
 
     run retraining_experiment.m
 
-The testing script will execute the retraining on the neural networks stored in the bin folder. At the beginning of the retraining script there are a few parameters you can set.
+The script will execute the retraining on the neural networks stored in the bin folder. Each file in the bin folder is expected to have a name according to the following regex: nn[0-9]+\.mat. For example: nn0.mat or nn42.mat are valid names. At the beginning of the experimentation script there are a few parameters you can set.
 
-    window_sizes: shortened counter examples will be tested with the sizes listed here
+    environments: the list of neural network ids to use for retraining (corresponding to the number in the file names in the bin folder)
 
-    networks: list of the neural networks to use from the bin folder
+    window_sizes: the list of the sizes with which the counter-example intervals are extended with
+
+    cex_thresholds: the list of the maximum number of counter-examples used for retraining
 
     MAX_TEST_ITERATION: the retraining stops if no counter-examples are found after falsification or this iteration limit is reached
 
-    WINDOW_SIZE: used to set the current window size during the iterations
+    RETRAINING_ERROR_THRESHOLD: if this limit is reached, instead of retraining, we train a new neural network with the current data
+
+    SHORTENED_CEX: if set to 1, shortened counter-examples are used and complete ones otherwise
 
     ACCUMULATE_CEX: if set to 1, then the counter-examples found in an iteration will be stored for the later iterations
 
-    RETRAINING_ERROR_THRESHOLD: if the previous retraining validation error was higher than this value, the neural network is trained from scratch
+    USE_POSITIVE_DIAGNOSIS: if set to 1, we use the explanation for the satisfaction of a Signal Temporal Logic formula as retraining data instead of the explanation for the violation
+
+    USE_ALL_DATA_FOR_RETRAINING: if set to 1, both original training data and the newly generated training data is used for retraining, otherwise only the new one
 
 
-After the executions the resulting workspace files are put in the results folder. The script result_to_csv.m will convert the data from the workspace to csv format (printed to the console). AnalyseExperiments.ipynb is a Jupyter notebook to create plots based on the csv file.
+After the executions the resulting workspace files are put in the results folder. The script **result_to_csv.m** will convert the data from Matlab workspace to CSV format in the **results.csv** file. AnalyseExperiments.ipynb is a Jupyter notebook to create plots based on the data in the CSV file.
 
+## Tests
+
+Independent functions have unittests in the unittest folder. They can be executed separately by opening the file and running selected test cases or with the **run_unittests.m** script in the main folder.
