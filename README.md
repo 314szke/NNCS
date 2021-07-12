@@ -1,6 +1,6 @@
 # Framework to Create Neural Network Control Systems
 
-This repository is based on [NNCS_matlab](https://github.com/nikos-kekatos/NNCS_matlab). It provides features to create, train and retrain neural network controllers to mimic given nominal controllers. The project provides methods to analyse the performance of the neural network controllers with respect to safety properties of the controlled system using formal verification tools of Breach.
+This repository is based on [NNCS_matlab](https://github.com/nikos-kekatos/NNCS_matlab). It provides features to create, train and retrain neural network controllers to mimic given nominal controllers. The project provides methods to analyse the performance of the neural network controllers with respect to safety properties of the controlled system using the formal verification tools of Breach.
 
 ## Getting started
 ### Prerequisites
@@ -20,7 +20,11 @@ No installation required, the project is ready to use after cloning. The **Initi
 The path to Breach can be changed in the **Initialize.m** function.
 ### Repository structure
 
+The entry point of the repository is in the **main** folder. It contains the scripts to create and retrain neural network controllers. Additionally, the **retraining_experiment.m** handles the execution of extensive experimentation with different configuration options and **run_unittests.m** can be used to run all available unittests.
 
+The Simulink models are in the **models** folder and the Signal Temporal Logic (STL) specifications are in the **specification** folder. Additionally, there is a folder named **extras** which contain helper functions which are specific to given use cases.
+
+The experimentation script uses workspace binaries which are stored in the **bin** folder. The result of the experiments are new workspace binaries which are stored in the **results** folder.
 ## Adding a new use case
 
 ## Experiments
