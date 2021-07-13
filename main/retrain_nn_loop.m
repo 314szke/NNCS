@@ -19,9 +19,9 @@ new_nn_models{1}.block_name = 'nn';
 for idx = 1:length(nn_models)
     UpdateNeuralNetwork(net, nn_models{idx}.path, nn_models{idx}.block_name);
 end
-nominal_model = CreateModel(nominal_model_path);
+nominal_model = CreateModel(nominal_model_path, simulation);
 nn_model = CreateNeuralSwitchingControllerModel(nn_model_path, coverage_options);
-plot_model1 = CreateModel(parallel_model_before_retraining_path);
+plot_model1 = CreateModel(parallel_model_before_retraining_path, simulation);
 % IMPORTANT: the retrained models are created at the final verification step!
 
 % Setup the STL requirements
@@ -113,10 +113,10 @@ for iteration = 1:MAX_EXPERIMENT_ITERATION
 
     %% Verify if the counter examples disappeared
     fprintf('4) Verify if counter-examples are eliminated.\n');
-    nn_retrained_model = CreateModel(nn_model_retrained_path);
+    nn_retrained_model = CreateModel(nn_model_retrained_path, simulation);
     [~, ~, remaining_cex] = EvaluateModel(nn_retrained_model, cex_traces, nn_requirement);
 
-    
+
     %% Save retraining results
     result.retraining_time = timer.retrain;
     result.training_error = tr.best_tperf;

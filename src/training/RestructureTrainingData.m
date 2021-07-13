@@ -9,6 +9,9 @@ end
 if length(REF) ~= length(U) || length(U) ~= length(Y)
     error("RestructureTrainingData:VaryingLength", "The input arguments must have the same length!");
 end
+if dimension < 1
+    error("RestructureTrainingData:InvalidInput", "The input argument 'dimension' must not be less than 1!");
+end
 
 
 %% Create a six dimensional vector with 3 reference and 3 Y values

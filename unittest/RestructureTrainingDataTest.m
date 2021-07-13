@@ -26,6 +26,14 @@ function testVaryingArrayLength(testCase)
     testCase.verifyError(@()RestructureTrainingData(REF, U, Y, dimension), 'RestructureTrainingData:VaryingLength');
 end
 
+function testInvalidDimension(testCase)
+    REF = 1;
+    U = 1;
+    Y = 1;
+    dimension = -1;
+    testCase.verifyError(@()RestructureTrainingData(REF, U, Y, dimension), 'RestructureTrainingData:InvalidInput');
+end
+
 function testWithOneElement(testCase)
     REF = 1;
     U = 2;

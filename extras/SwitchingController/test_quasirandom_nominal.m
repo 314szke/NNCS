@@ -12,7 +12,7 @@ simulation.time_step = 0.01;
 %% Config Breach interface
 model_path = 'models/SwitchingController';
 nominal_model_path = sprintf('%s/switching_controller_nominal', model_path);
-nominal_model = CreateModel(nominal_model_path);
+nominal_model = CreateModel(nominal_model_path, simulation);
 nominal_model.SetInputGen('UniStep2');
 input_parameters = nominal_model.expand_param_name('ref_u.+');
 nominal_model.SetParamRanges(input_parameters, [0 1]);
