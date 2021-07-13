@@ -42,7 +42,7 @@ else
     training_data.Y = [new_data.Y];
 end
 
-[in, out] = RestructureTrainingData(training_data.REF, training_data.U, training_data.Y);
+[in, out] = RestructureTrainingData(training_data.REF, training_data.U, training_data.Y, options.input_dimension);
 
 
 %% Retrain the network

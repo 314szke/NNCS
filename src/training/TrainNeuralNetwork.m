@@ -16,7 +16,7 @@ end
 
 
 %% Create neural network and train it on the given data
-[in, out] = RestructureTrainingData(data.REF, data.U, data.Y);
+[in, out] = RestructureTrainingData(data.REF, data.U, data.Y, options.input_dimension);
 
 net = feedforwardnet(options.neurons);
 net.performFcn = options.loss_function;
