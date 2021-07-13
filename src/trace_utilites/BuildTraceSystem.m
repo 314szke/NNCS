@@ -1,10 +1,7 @@
-function trace_system = BuildTraceSystem(evaluation_result, trace_intervals, unique_trace_indexes)
+function trace_system = BuildTraceSystem(evaluation_result, unique_trace_indexes)
 %% Validate input arguments
 if isa(evaluation_result, 'BreachRequirement') == 0
     error("BuildTraceSystem:TypeError", "The parameter 'evaluation_result' must have type 'BreachRequirement'!");
-end
-if isa(trace_intervals, 'cell') == 0
-    error("BuildTraceSystem:TypeError", "The parameter 'trace_intervals' must have type 'cell' array!");
 end
 if isa(unique_trace_indexes, 'double') == 0
     error("BuildTraceSystem:TypeError", "The parameter 'unique_trace_indexes' must have type 'double' array!");

@@ -21,7 +21,7 @@ unique_trace_indexes = FindUniqueTraces(trace_intervals, unique_intervals);
 for trace_idx = 1:length(unique_trace_indexes)
     fprintf('Example %d/%d\n', trace_idx, length(unique_trace_indexes));
 
-    trace_system = BuildTraceSystem(evaluation_result, trace_intervals, unique_trace_indexes(trace_idx));
+    trace_system = BuildTraceSystem(evaluation_result, unique_trace_indexes(trace_idx));
     model.SetInputGen(trace_system);
     model.Sim();
     model.PlotSignals(plot_labels);

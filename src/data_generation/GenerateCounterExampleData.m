@@ -59,7 +59,7 @@ if num_cex > options.cex_threshold
     unique_cex_trace_indexes = unique_cex_trace_indexes(1:num_cex);
 end
 
-cex_traces = BuildTraceSystem(falsification_result, cex_intervals, unique_cex_trace_indexes);
+cex_traces = BuildTraceSystem(falsification_result, unique_cex_trace_indexes);
 
 
 %% Simulate the nominal controller to obtain the correct control values
