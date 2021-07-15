@@ -96,7 +96,7 @@ for iteration = 1:MAX_EXPERIMENT_ITERATION
     %% Retraining with counter examples
     fprintf('2) Retrain with additional counter-example data.\n');
     retraining_timer = tic;
-    [new_net, tr, trained_from_scratch] = RetrainNeuralNetwork(net, data, new_data, training_options);
+    [new_net, tr, trained_from_scratch] = RetrainNeuralNetwork(net, data, new_data, training_options, trimming_options);
     timer.retrain = toc(retraining_timer);
 
     fprintf('Retraining time: %0.2f seconds.\n', timer.retrain);

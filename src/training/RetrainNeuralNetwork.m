@@ -1,4 +1,4 @@
-function [new_net, tr, trained_from_scratch] = RetrainNeuralNetwork(net, data, new_data, options)
+function [new_net, tr, trained_from_scratch] = RetrainNeuralNetwork(net, data, new_data, options, trimming_options)
 %% Validate input arguments
 if isa(net, 'network') == 0
     error("RetrainNeuralNetwork:TypeError", "The argument 'net' must have type 'network'!");
@@ -43,9 +43,9 @@ else
 end
 
 [in, out] = RestructureTrainingData(training_data.REF, training_data.U, training_data.Y, options.input_dimension);
-if options.trim_data
+if trimming_options.enabled
     fprintf('Number of data points before trimming: %d.\n', length(out));
-    [in, out] = TrimTrainingData(in, out, options.trim_distance_criteria, options.trim_allowed_repetition);
+    [in, out] = TrimTrainingData(in, out, trimming_options.max_distance_criteria, trimming_options.allowed_repetition);
     fprintf('Number of data points after trimming: %d.\n', length(out));
 end
 

@@ -39,7 +39,7 @@ options.num_falsification_traces = 100;
 options.use_shortened_cex = 0;
 options.use_positive_diagnosis = 0;
 options.window_size = 4;
-options.cex_threshold = 50;
+options.cex_threshold = 10;
 options.plot = 0;
 
 % Other parameters
@@ -70,7 +70,7 @@ fprintf('The neural network controller produced %i counter-examples in %i input 
 %% Retraining
 fprintf('2) Retrain with additional counter-example data.\n');
 retraining_timer = tic;
-[new_net, tr, ~] = RetrainNeuralNetwork(net, data, new_data, training_options);
+[new_net, tr, ~] = RetrainNeuralNetwork(net, data, new_data, training_options, trimming_options);
 timer.retrain = toc(retraining_timer);
 
 fprintf('Retraining time: %0.2f seconds.\n', timer.retrain);

@@ -43,9 +43,12 @@ training_options.max_validation_checks = 50;
 training_options.target_error_rate = 1e-5;
 training_options.regularization = 0;
 training_options.input_dimension = 6;
-training_options.trim_data = 1;
-training_options.trim_distance_criteria = 0.02;
-training_options.trim_allowed_repetition = 100;
+
+% Trimming options
+trimming_options.enabled = 1;
+trimming_options.max_distance_criteria = 0.001;
+trimming_options.allowed_repetition = 20;
+trimming_options.plot = 1;
 
 % Other parameters
 workspace_name = 'nn.mat';
@@ -53,13 +56,19 @@ workspace_name = 'nn.mat';
 
 %% Data generation
 fprintf('1) Create coverage data.\n');
-data = GenerateInputCoverageData(nominal_model, coverage_options);
+[data, num_traces] = GenerateInputCoverageData(nominal_model, coverage_options);
+
+
+%% Explore trimming effect
+if trimming_options.enabled && trimming_options.plot
+    ExploreTrimming(nominal_model, num_traces, training_options.input_dimension, trimming_options);
+end
 
 
 %% Training
 fprintf('2) Create and train the initial neural network.\n');
 training_timer = tic;
-[net, tr] = TrainNeuralNetwork(data, training_options);
+[net, tr] = TrainNeuralNetwork(data, training_options, trimming_options);
 timer.train = toc(training_timer);
 
 fprintf('Training time: %0.2f seconds.\n', timer.train);

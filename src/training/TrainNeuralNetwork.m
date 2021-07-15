@@ -1,4 +1,4 @@
-function [net, tr] = TrainNeuralNetwork(data, options)
+function [net, tr] = TrainNeuralNetwork(data, options, trimming_options)
 %% Validate input arguments
 if isstruct(data) == 0
     error("TrainNeuralNetwork:TypeError", "The argument 'data' must have type 'struct'!");
@@ -17,9 +17,9 @@ end
 
 %% Create neural network and train it on the given data
 [in, out] = RestructureTrainingData(data.REF, data.U, data.Y, options.input_dimension);
-if options.trim_data
+if trimming_options.enabled
     fprintf('Number of data points before trimming: %d.\n', length(out));
-    [in, out] = TrimTrainingData(in, out, options.trim_distance_criteria, options.trim_allowed_repetition);
+    [in, out] = TrimTrainingData(in, out, trimming_options.max_distance_criteria, trimming_options.allowed_repetition);
     fprintf('Number of data points after trimming: %d.\n', length(out));
 end
 
