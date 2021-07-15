@@ -1,4 +1,6 @@
 bin/*.mat
+results/experiment*
+results/results.csv
 slprj
 **/slprj
 **/slprj/**
