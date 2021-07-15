@@ -19,7 +19,7 @@ function testEmptyInput(testCase)
 end
 
 function testVaryingArrayLength(testCase)
-    REF = [0 1];
+    REF = [0; 1];
     U = 0;
     Y = 0;
     dimension = 1;
@@ -48,40 +48,40 @@ function testWithOneElement(testCase)
 end
 
 function testWithTwoElements(testCase)
-    REF = [1 2];
-    U = [3 4];
-    Y = [5 6];
+    REF = [1; 2];
+    U = [3; 4];
+    Y = [5; 6];
     dimension = 6;
     [in, out] = RestructureTrainingData(REF, U, Y, dimension);
 
     expected_in = [[1 2]; [0 1]; [0 0]; [5 6]; [0 5]; [0 0]];
-    expected_out = [3; 4];
+    expected_out = [3 4];
     verifyEqual(testCase, in, expected_in);
     verifyEqual(testCase, out, expected_out);
 end
 
 function testWithMultipleElements(testCase)
-    REF = [1 2 3 4];
-    U = [5 6 7 8];
-    Y = [9 10 11 12];
+    REF = [1; 2; 3; 4];
+    U = [5; 6; 7; 8];
+    Y = [9; 10; 11; 12];
     dimension = 6;
     [in, out] = RestructureTrainingData(REF, U, Y, dimension);
 
     expected_in = [[1 2 3 4]; [0 1 2 3]; [0 0 1 2]; [9 10 11 12]; [0 9 10 11]; [0 0 9 10]];
-    expected_out = [5; 6; 7; 8];
+    expected_out = [5 6 7 8];
     verifyEqual(testCase, in, expected_in);
     verifyEqual(testCase, out, expected_out);
 end
 
 function testWithDifferentDimension(testCase)
-    REF = [1 2 3 4];
-    U = [5 6 7 8];
-    Y = [9 10 11 12];
+    REF = [1; 2; 3; 4];
+    U = [5; 6; 7; 8];
+    Y = [9; 10; 11; 12];
     dimension = 8;
     [in, out] = RestructureTrainingData(REF, U, Y, dimension);
 
     expected_in = [[1 2 3 4]; [0 1 2 3]; [0 0 1 2]; [0 0 0 1]; [9 10 11 12]; [0 9 10 11]; [0 0 9 10]; [0 0 0 9]];
-    expected_out = [5; 6; 7; 8];
+    expected_out = [5 6 7 8];
     verifyEqual(testCase, in, expected_in);
     verifyEqual(testCase, out, expected_out);
 end

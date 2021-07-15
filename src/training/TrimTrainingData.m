@@ -1,6 +1,6 @@
-function [new_in, new_out] = TrimTrainingData(in, out, dimension, epsilon)
+function [new_in, new_out] = TrimTrainingData(in, out, epsilon, repetition)
 %% Validate input arguments
-if isa(in, 'double') == 0 || isa(out, 'double') == 0 || isa(epsilon, 'double') == 0 || isa(dimension, 'double') == 0
+if isa(in, 'double') == 0 || isa(out, 'double') == 0 || isa(epsilon, 'double') == 0 || isa(repetition, 'double') == 0
     error("TrimTrainingData:TypeError", "The input arguments must have type 'double' array!");
 end
 if isempty(in) || isempty(out)
@@ -9,14 +9,11 @@ end
 if length(out) ~= length(in(1, :))
     error("TrimTrainingData:InputMismatch", "The dimensions of input argument 'in' must align with the argument 'out'!");
 end
-if dimension < 1
-    error("TrimTrainingData:InvalidInput", "The input argument 'dimension' must not be less than 1!");
-end
-if dimension ~= length(in(:, 1))
-    error("TrimTrainingData:InputMismatch", "The input argument 'dimension' must align with the argument 'in' dimensions!");
-end
 if epsilon < 0
     error("TrimTrainingData:InvalidInput", "The input argument 'epsilon' must not be negative!");
+end
+if repetition < 0
+    error("TrimTrainingData:InvalidInput", "The input argument 'repetition' must not be negative!");
 end
 
 
@@ -25,8 +22,15 @@ new_in(:, 1) = in(:, 1);
 new_out = out(1);
 
 last_idx = 1;
+num_equal_consecutive = 0;
 for idx = 2:length(out)
-    if InputVectorsAreEqual(in(:, idx), in(:, last_idx), epsilon) == 0
+    if InputVectorsAreEqual(in(:, idx), in(:, last_idx), epsilon)
+        num_equal_consecutive = num_equal_consecutive + 1;
+    else
+        num_equal_consecutive = 0;
+    end
+
+    if num_equal_consecutive <= repetition
         new_in(:, end+1) = in(:, idx);
         new_out = [new_out out(idx)];
         last_idx = idx;

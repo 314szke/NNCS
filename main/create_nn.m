@@ -19,7 +19,7 @@ nn_models{3}.path = parallel_model_after_retraining_path;
 nn_models{3}.block_name = 'nn_old';
 
 % Simulink parameters
-simulation.time_window = 40;
+simulation.time_window = 20;
 simulation.time_step = 0.01;
 
 % Create required models
@@ -29,7 +29,7 @@ nominal_model = CreateModel(nominal_model_path, simulation);
 coverage_options.min = 0;
 coverage_options.max = 1;
 coverage_options.cell_size = 0.1;
-coverage_options.dimension = 3;
+coverage_options.dimension = 2;
 coverage_options.coverage_point_type = 'random';
 coverage_options.plot = 0;
 
@@ -44,7 +44,8 @@ training_options.target_error_rate = 1e-5;
 training_options.regularization = 0;
 training_options.input_dimension = 6;
 training_options.trim_data = 1;
-training_options.max_input_distance = 0.04;
+training_options.trim_distance_criteria = 0.02;
+training_options.trim_allowed_repetition = 100;
 
 % Other parameters
 workspace_name = 'nn.mat';

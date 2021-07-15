@@ -19,7 +19,7 @@ end
 [in, out] = RestructureTrainingData(data.REF, data.U, data.Y, options.input_dimension);
 if options.trim_data
     fprintf('Number of data points before trimming: %d.\n', length(out));
-    [in, out] = TrimTrainingData(in, out, options.input_dimension, options.max_input_distance);
+    [in, out] = TrimTrainingData(in, out, options.trim_distance_criteria, options.trim_allowed_repetition);
     fprintf('Number of data points after trimming: %d.\n', length(out));
 end
 
