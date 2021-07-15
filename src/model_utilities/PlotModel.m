@@ -30,8 +30,11 @@ for trace_idx = 1:length(unique_trace_indexes)
     plot_requirement.PlotDiagnostics();
 
     if trace_idx < length(unique_trace_indexes)
-        input('Press ENTER to continue to the next example!');
+        answer = input('Press ENTER to continue to the next example or type STOP to stop displaying plots!', 's');
         close all;
+        if strcmp(answer, 'STOP')
+            return;
+        end
     end
 end
 

@@ -13,7 +13,7 @@ nn_model_retrained_path = sprintf('%s/switching_controller_nn_shortened_cex', mo
 new_nn_models{1}.path = nn_model_retrained_path;
 new_nn_models{1}.block_name = 'nn';
 new_nn_models{2}.path = parallel_model_after_retraining_path;
-new_nn_models{2}.block_name = 'nn_old';
+new_nn_models{2}.block_name = 'nn_new';
 
 % Update the models with the network in the workspace and create the required models
 for idx = 1:length(nn_models)
