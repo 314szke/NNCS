@@ -20,7 +20,7 @@ for idx = 1:length(nn_models)
     UpdateNeuralNetwork(net, nn_models{idx}.path, nn_models{idx}.block_name);
 end
 nominal_model = CreateModel(nominal_model_path, simulation);
-nn_model = CreateNeuralSwitchingControllerModel(nn_model_path, coverage_options);
+nn_model = CreateNeuralSwitchingControllerModel(nn_model_path, simulation, coverage_options);
 plot_model1 = CreateModel(parallel_model_before_retraining_path, simulation);
 % IMPORTANT: the retrained models are created at the final verification step!
 
@@ -43,7 +43,8 @@ options.plot = 0;
 
 % Other parameters
 training_options.error_threshold = RETRAINING_ERROR_THRESHOLD;
-training_options.use_all_data = USE_ALL_DATA_FOR_RETRAINING;
+data_options.use_all_data = USE_ALL_DATA_FOR_RETRAINING;
+
 rng(1976); % random generator seed for Matlab
 plot_labels1 = {'ref', 'u', 'u_nn', 'y', 'y_nn'};
 plot_labels2 = {'ref', 'u', 'u_nn_old', 'u_nn_new', 'y', 'y_nn_old', 'y_nn_new'};
@@ -78,7 +79,7 @@ for iteration = 1:MAX_EXPERIMENT_ITERATION
         new_data = complete_new_data;
     end
 
-    if isempty(new_data)
+    if isempty(fieldnames(new_data))
         fprintf('No counter-examples found, the retraining stops.\n');
         result.retraining_time = 0;
         result.training_error = 0;
@@ -93,10 +94,21 @@ for iteration = 1:MAX_EXPERIMENT_ITERATION
     fprintf('The neural network controller produced %i counter-examples in %i input traces.\n', num_cex, options.num_falsification_traces);
 
 
+    %% Prepare training data
+    fprintf('2) Restructure and trim the training data.\n');
+    if data_options.use_all_data == 1
+        training_data = ConcatenateData(data, new_data);
+    else
+        training_data = new_data;
+    end
+
+    [in, out] = PrepareTrainingData(training_data, data_options);
+
+
     %% Retraining with counter examples
-    fprintf('2) Retrain with additional counter-example data.\n');
+    fprintf('3) Retrain with additional counter-example data.\n');
     retraining_timer = tic;
-    [new_net, tr, trained_from_scratch] = RetrainNeuralNetwork(net, data, new_data, training_options, trimming_options);
+    [new_net, tr, trained_from_scratch] = RetrainNeuralNetwork(net, in, out, training_options);
     timer.retrain = toc(retraining_timer);
 
     fprintf('Retraining time: %0.2f seconds.\n', timer.retrain);
@@ -105,14 +117,14 @@ for iteration = 1:MAX_EXPERIMENT_ITERATION
 
 
     %% Save retrained model
-    fprintf('3) Update the Simulink models.\n');
+    fprintf('4) Update the Simulink models.\n');
     for idx = 1:length(new_nn_models)
         UpdateNeuralNetwork(net, new_nn_models{idx}.path, new_nn_models{idx}.block_name);
     end
 
 
     %% Verify if the counter examples disappeared
-    fprintf('4) Verify if counter-examples are eliminated.\n');
+    fprintf('5) Verify if counter-examples are eliminated.\n');
     nn_retrained_model = CreateModel(nn_model_retrained_path, simulation);
     [~, ~, remaining_cex] = EvaluateModel(nn_retrained_model, cex_traces, nn_requirement);
 
@@ -130,13 +142,12 @@ for iteration = 1:MAX_EXPERIMENT_ITERATION
 
     %% Save counter example data
     if ACCUMULATE_CEX == 1
-        data.REF = [data.REF; new_data.REF];
-        data.U = [data.U; new_data.U];
-        data.Y = [data.Y; new_data.Y];
+        data = ConcatenateData(data, new_data);
     end
 
 
     %% Update simulink models for next iteration
+    fprintf('6) Update the Simulink models for the next iteration.\n');
     for idx = 1:length(nn_models)
         UpdateNeuralNetwork(net, nn_models{idx}.path, nn_models{idx}.block_name);
     end

@@ -33,6 +33,13 @@ coverage_options.dimension = 2;
 coverage_options.coverage_point_type = 'random';
 coverage_options.plot = 0;
 
+% Training data options
+data_options.input_dimension = 6;
+data_options.trimming_enabled = 1;
+data_options.trim_distance_criteria = 0.001;
+data_options.trim_allowed_repetition = 20;
+data_options.plot = 0;
+
 % Training parameters
 training_options.neurons = [20 10];
 training_options.loss_function = 'mse';
@@ -42,13 +49,6 @@ training_options.activation_function = 'tansig';
 training_options.max_validation_checks = 50;
 training_options.target_error_rate = 1e-5;
 training_options.regularization = 0;
-training_options.input_dimension = 6;
-
-% Trimming options
-trimming_options.enabled = 1;
-trimming_options.max_distance_criteria = 0.001;
-trimming_options.allowed_repetition = 20;
-trimming_options.plot = 1;
 
 % Other parameters
 workspace_name = 'nn.mat';
@@ -56,19 +56,22 @@ workspace_name = 'nn.mat';
 
 %% Data generation
 fprintf('1) Create coverage data.\n');
-[data, num_traces] = GenerateInputCoverageData(nominal_model, coverage_options);
+[data, num_traces, num_points] = GenerateInputCoverageData(nominal_model, coverage_options);
+fprintf('Number of data points generated with coverage: %d.\n', num_points);
 
 
-%% Explore trimming effect
-if trimming_options.enabled && trimming_options.plot
-    ExploreTrimming(nominal_model, num_traces, training_options.input_dimension, trimming_options);
+%% Prepare training data
+fprintf('2) Restructure and trim the training data.\n');
+[in, out] = PrepareTrainingData(data, data_options);
+if data_options.trimming_enabled && data_options.plot
+    ExploreTrimming(nominal_model.GetTime(), data, data_options);
 end
 
 
 %% Training
-fprintf('2) Create and train the initial neural network.\n');
+fprintf('3) Create and train the initial neural network.\n');
 training_timer = tic;
-[net, tr] = TrainNeuralNetwork(data, training_options, trimming_options);
+[net, tr] = TrainNeuralNetwork(in, out, training_options);
 timer.train = toc(training_timer);
 
 fprintf('Training time: %0.2f seconds.\n', timer.train);
@@ -77,12 +80,12 @@ fprintf('The obtained training error is %f.\n', tr.best_tperf);
 
 
 %% Save the neural network
-fprintf('3) Update the Simulink models.\n');
-for idx = 1:numel(nn_models)
+fprintf('4) Update the Simulink models.\n');
+for idx = 1:length(nn_models)
     UpdateNeuralNetwork(net, nn_models{idx}.path, nn_models{idx}.block_name);
 end
 
 
 %% Prepare workspace for retraining
-fprintf('4) Save workspace.\n');
+fprintf('5) Save workspace.\n');
 save(workspace_name);

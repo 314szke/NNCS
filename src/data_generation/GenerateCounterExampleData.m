@@ -31,8 +31,8 @@ falsification_result = f_problem.GetFalse();
 
 
 %% Initialize return variables to empty
-complete_new_data = {};
-shortened_new_data = {};
+complete_new_data = struct();
+shortened_new_data = struct();
 num_cex = 0;
 cex_traces = [];
 

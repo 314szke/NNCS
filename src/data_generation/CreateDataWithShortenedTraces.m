@@ -18,9 +18,9 @@ end
 
 
 %% Use only the trace values inside the intervals
-ref_values = [];
-u_values = [];
-y_values = [];
+data.REF = cell(1, length(unique_trace_indexes));
+data.U = cell(1, length(unique_trace_indexes));
+data.Y = cell(1, length(unique_trace_indexes));
 
 time_values = evaluation_result.GetTime();
 max_time = time_values(end);
@@ -29,18 +29,14 @@ for trace_idx = 1:length(unique_trace_indexes)
     intervals = trace_intervals{unique_trace_indexes(trace_idx)};
     intervals = ExtendIntervals(intervals, window_size, max_time);
 
+    values = ExtractIntervalValues(model.GetSignalValues({'ref'}, trace_idx), time_values, intervals);
+    data.REF{trace_idx} = values;
+
     values = ExtractIntervalValues(model.GetSignalValues({'u'}, trace_idx), time_values, intervals);
-    u_values = [u_values, values];
+    data.U{trace_idx} = values;
 
     values = ExtractIntervalValues(model.GetSignalValues({'y'}, trace_idx), time_values, intervals);
-    y_values = [y_values, values];
-
-    values = ExtractIntervalValues(model.GetSignalValues({'ref'}, trace_idx), time_values, intervals);
-    ref_values = [ref_values, values];
+    data.Y{trace_idx} = values;
 end
-
-data.REF = ref_values';
-data.U = u_values';
-data.Y = y_values';
 
 end

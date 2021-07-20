@@ -1,28 +1,17 @@
-function [net, tr] = TrainNeuralNetwork(data, options, trimming_options)
+function [net, tr] = TrainNeuralNetwork(in, out, options)
 %% Validate input arguments
-if isstruct(data) == 0
-    error("TrainNeuralNetwork:TypeError", "The argument 'data' must have type 'struct'!");
+if isa(in, 'double') == 0
+    error("TrainNeuralNetwork:TypeError", "The argument 'in' must have type 'double' array!");
 end
-fields = fieldnames(data);
-if strcmp(fields{1}, 'REF') == 0
-    error("TrainNeuralNetwork:TypeError", "The argument 'data' must have a field named 'REF'!");
+if isa(out, 'double') == 0
+    error("TrainNeuralNetwork:TypeError", "The argument 'out' must have type 'double' array!");
 end
-if strcmp(fields{2}, 'U') == 0
-    error("TrainNeuralNetwork:TypeError", "The argument 'data' must have a field named 'U'!");
-end
-if strcmp(fields{3}, 'Y') == 0
-    error("TrainNeuralNetwork:TypeError", "The argument 'data' must have a field named 'Y'!");
+if isstruct(options) == 0
+    error("TrainNeuralNetwork:TypeError", "The argument 'options' must have type 'struct'!");
 end
 
 
 %% Create neural network and train it on the given data
-[in, out] = RestructureTrainingData(data.REF, data.U, data.Y, options.input_dimension);
-if trimming_options.enabled
-    fprintf('Number of data points before trimming: %d.\n', length(out));
-    [in, out] = TrimTrainingData(in, out, trimming_options.max_distance_criteria, trimming_options.allowed_repetition);
-    fprintf('Number of data points after trimming: %d.\n', length(out));
-end
-
 net = feedforwardnet(options.neurons);
 net.performFcn = options.loss_function;
 net.trainFcn = options.optimizer_function;

@@ -9,18 +9,14 @@ end
 
 
 %% Use the complete traces for retraining
-ref_values = [];
-u_values = [];
-y_values = [];
+data.REF = cell(1, num_traces);
+data.U = cell(1, num_traces);
+data.Y = cell(1, num_traces);
 
 for trace_idx = 1:num_traces
-    u_values = [u_values, model.GetSignalValues({'u'}, trace_idx)];
-    y_values = [y_values, model.GetSignalValues({'y'}, trace_idx)];
-    ref_values = [ref_values, model.GetSignalValues({'ref'}, trace_idx)];
+    data.REF{trace_idx} = model.GetSignalValues({'ref'}, trace_idx);
+    data.U{trace_idx} = model.GetSignalValues({'u'}, trace_idx);
+    data.Y{trace_idx} = model.GetSignalValues({'y'}, trace_idx);
 end
-
-data.REF = ref_values';
-data.U = u_values';
-data.Y = y_values';
 
 end

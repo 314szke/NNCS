@@ -1,4 +1,4 @@
-function [data, num_traces] = GenerateInputCoverageData(model, options)
+function [data, num_traces, num_points] = GenerateInputCoverageData(model, options)
 %% Validate input arguments
 if isa(model, 'BreachSimulinkSystem') == 0
     error("The parameter 'model' must have type 'BreachSimulinkSystem'!");
@@ -66,6 +66,7 @@ model.SetParam(input_parameters, coverage_points);
 model.Sim();
 data = CreateDataWithCompleteTraces(model, num_cells);
 num_traces = num_cells;
+num_points = num_traces * length(data.REF{1});
 
 
 %% Plot result

@@ -44,7 +44,9 @@ options.plot = 0;
 
 % Other parameters
 training_options.error_threshold = 0.1;
-training_options.use_all_data = 1;
+data_options.use_all_data = 1;
+data_options.trimming_enabled = 1;
+
 rng(1976); % random generator seed for Matlab
 plot_labels1 = {'ref', 'u', 'u_nn', 'y', 'y_nn'};
 plot_labels2 = {'ref', 'u', 'u_nn_old', 'u_nn_new', 'y', 'y_nn_old', 'y_nn_new'};
@@ -60,17 +62,28 @@ else
     new_data = complete_new_data;
 end
 
-if isempty(new_data)
+if isempty(fieldnames(new_data))
     fprintf('No counter-examples found, the retraining stops.\n');
     return;
 end
 fprintf('The neural network controller produced %i counter-examples in %i input traces.\n', num_cex, options.num_falsification_traces);
 
 
+%% Prepare training data
+fprintf('2) Restructure and trim the training data.\n');
+if data_options.use_all_data == 1
+    training_data = ConcatenateData(data, new_data);
+else
+    training_data = new_data;
+end
+
+[in, out] = PrepareTrainingData(training_data, data_options);
+
+
 %% Retraining
-fprintf('2) Retrain with additional counter-example data.\n');
+fprintf('3) Retrain with additional counter-example data.\n');
 retraining_timer = tic;
-[new_net, tr, ~] = RetrainNeuralNetwork(net, data, new_data, training_options, trimming_options);
+[new_net, tr, ~] = RetrainNeuralNetwork(net, in, out, training_options);
 timer.retrain = toc(retraining_timer);
 
 fprintf('Retraining time: %0.2f seconds.\n', timer.retrain);
@@ -79,14 +92,14 @@ fprintf('The obtained training error is %f.\n', tr.best_tperf);
 
 
 %% Save the new neural network
-fprintf('3) Update the Simulink models.\n');
+fprintf('4) Update the Simulink models.\n');
 for idx = 1:length(new_nn_models)
     UpdateNeuralNetwork(net, new_nn_models{idx}.path, new_nn_models{idx}.block_name);
 end
 
 
 %% Verification
-fprintf('4) Verify if counter-examples are eliminated.\n');
+fprintf('5) Verify if counter-examples are eliminated.\n');
 nn_retrained_model = CreateModel(nn_model_retrained_path, simulation);
 [~, evaluation_result, remaining_cex] = EvaluateModel(nn_retrained_model, cex_traces, nn_requirement);
 

@@ -14,7 +14,7 @@ if dimension < 1
 end
 
 
-%% Create a six dimensional vector with 3 reference and 3 Y values
+%% Create a multi-dimensional vector with previous reference and Y values
 in = zeros(dimension, length(REF));
 out = U';
 

@@ -5,7 +5,7 @@ warning('off', 'SetParam:param_not_in_list');
 clear; close all; clc; bdclose('all');
 
 % Simulink parameters
-simulation.time_window = 40;
+simulation.time_window = 20;
 simulation.time_step = 0.01;
 
 
