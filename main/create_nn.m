@@ -47,7 +47,7 @@ training_options.optimizer_function = 'trainlm';
 training_options.divider_function = 'dividerand';
 training_options.activation_function = 'tansig';
 training_options.max_validation_checks = 50;
-training_options.target_error_rate = 1e-5;
+training_options.target_error_rate = 1e-3;
 training_options.regularization = 0;
 
 % Other parameters
