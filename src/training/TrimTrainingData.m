@@ -1,6 +1,6 @@
-function [new_in, new_out] = TrimTrainingData(in, out, epsilon, repetition)
+function [new_in, new_out, trace_end_indices] = TrimTrainingData(in, out, trace_end_indices, epsilon, repetition)
 %% Validate input arguments
-if isa(in, 'double') == 0 || isa(out, 'double') == 0 || isa(epsilon, 'double') == 0 || isa(repetition, 'double') == 0
+if isa(in, 'double') == 0 || isa(out, 'double') == 0 || isa(trace_end_indices, 'double') == 0 || isa(epsilon, 'double') == 0 || isa(repetition, 'double') == 0
     error("TrimTrainingData:TypeError", "The input arguments must have type 'double' array!");
 end
 if isempty(in) || isempty(out)
@@ -21,8 +21,15 @@ end
 new_in(:, 1) = in(:, 1);
 new_out = out(1);
 
+trace_idx = 1;
 last_idx = 1;
 num_equal_consecutive = 0;
+
+% In case the first trace has only one data point
+if trace_end_indices(trace_idx) == 1
+    trace_idx = 2;
+end
+
 for idx = 2:length(out)
     if InputVectorsAreEqual(in(:, idx), in(:, last_idx), epsilon)
         num_equal_consecutive = num_equal_consecutive + 1;
@@ -34,6 +41,11 @@ for idx = 2:length(out)
         new_in(:, end+1) = in(:, idx);
         new_out = [new_out out(idx)];
         last_idx = idx;
+    end
+
+    if idx == trace_end_indices(trace_idx)
+        trace_end_indices(trace_idx) = length(new_out);
+        trace_idx = trace_idx + 1;
     end
 end
 

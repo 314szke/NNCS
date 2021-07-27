@@ -44,6 +44,7 @@ options.plot = 0;
 
 % Other parameters
 training_options.error_threshold = 0.1;
+training_options.target_error_rate = 1e-4;
 data_options.use_all_data = 1;
 data_options.trimming_enabled = 1;
 
@@ -77,7 +78,8 @@ else
     training_data = new_data;
 end
 
-[in, out] = PrepareTrainingData(training_data, data_options);
+[in, out, trace_end_indices] = PrepareTrainingData(training_data, data_options);
+training_options = SplitTrainingData(trace_end_indices, training_options);
 
 
 %% Retraining

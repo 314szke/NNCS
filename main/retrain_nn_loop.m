@@ -43,6 +43,7 @@ options.plot = 0;
 
 % Other parameters
 training_options.error_threshold = RETRAINING_ERROR_THRESHOLD;
+training_options.target_error_rate = 1e-4;
 data_options.use_all_data = USE_ALL_DATA_FOR_RETRAINING;
 
 rng(1976); % random generator seed for Matlab
@@ -102,7 +103,8 @@ for iteration = 1:MAX_EXPERIMENT_ITERATION
         training_data = new_data;
     end
 
-    [in, out] = PrepareTrainingData(training_data, data_options);
+    [in, out, trace_end_indices] = PrepareTrainingData(training_data, data_options);
+    training_options = SplitTrainingData(trace_end_indices, training_options);
 
 
     %% Retraining with counter examples

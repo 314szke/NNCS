@@ -44,7 +44,10 @@ data_options.plot = 0;
 training_options.neurons = [20 10];
 training_options.loss_function = 'mse';
 training_options.optimizer_function = 'trainlm';
-training_options.divider_function = 'dividerand';
+training_options.divider_function = 'divideind';
+training_options.training_data_ratio = 0.7;
+training_options.validation_data_ratio = 0.1;
+training_options.test_data_ratio = 0.2;
 training_options.activation_function = 'tansig';
 training_options.max_validation_checks = 50;
 training_options.target_error_rate = 1e-3;
@@ -62,7 +65,8 @@ fprintf('Number of data points generated with coverage: %d.\n', num_points);
 
 %% Prepare training data
 fprintf('2) Restructure and trim the training data.\n');
-[in, out] = PrepareTrainingData(data, data_options);
+[in, out, trace_end_indices] = PrepareTrainingData(data, data_options);
+training_options = SplitTrainingData(trace_end_indices, training_options);
 if data_options.trimming_enabled && data_options.plot
     ExploreTrimming(nominal_model.GetTime(), data, data_options);
 end

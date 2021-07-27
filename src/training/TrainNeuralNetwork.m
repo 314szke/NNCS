@@ -13,10 +13,9 @@ end
 
 %% Create neural network and train it on the given data
 net = feedforwardnet(options.neurons);
-net.performFcn = options.loss_function;
 net.trainFcn = options.optimizer_function;
+net.performFcn = options.loss_function;
 net.divideFcn = options.divider_function;
-net.initFcn = 'initlay';
 
 for layer_idx = 1:length(options.neurons)
     net.layers{layer_idx}.transferFcn = options.activation_function;
@@ -28,6 +27,10 @@ net.trainParam.goal = options.target_error_rate;
 
 net.performParam.regularization = options.regularization;
 net.performParam.normalization = 'none';
+
+net.divideParam.trainInd = options.training_data_indices;
+net.divideParam.valInd = options.validation_data_indices;
+net.divideParam.testInd = options.test_data_indices;
 
 net = configure(net, in, out);
 net = init(net);
