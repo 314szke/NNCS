@@ -1,24 +1,24 @@
 function values = ExtractIntervalValues(trace_values, time_values, intervals)
 %% Validate input arguments
 if isa(trace_values, 'double') == 0
-    error("ExtractIntervalValues:TypeError", "The parameter 'trace_values' must have type 'double' array!");
+    error("ExtractIntervalValues:TypeError", "The input argument 'trace_values' must have type 'double' array!");
 end
 if isa(time_values, 'double') == 0
-    error("ExtractIntervalValues:TypeError", "The parameter 'time_values' must have type 'double' array!");
+    error("ExtractIntervalValues:TypeError", "The input argument 'time_values' must have type 'double' array!");
 end
 if isempty(intervals)
     values = [];
     return;
 end
 if isstruct(intervals) == 0
-    error("ExtractIntervalValues:TypeError", "The parameter 'intervals' must have type 'struct'!");
+    error("ExtractIntervalValues:TypeError", "The input argument 'intervals' must have type 'struct'!");
 end
 fields = fieldnames(intervals);
 if strcmp(fields{1}, 't_begin') == 0
-    error("ExtractIntervalValues:TypeError", "The parameter 'intervals' must have a field named 't_begin'!");
+    error("ExtractIntervalValues:TypeError", "The input argument 'intervals' must have a field named 't_begin'!");
 end
 if strcmp(fields{2}, 't_end') == 0
-    error("ExtractIntervalValues:TypeError", "The parameter 'intervals' must have a field named 't_end'!");
+    error("ExtractIntervalValues:TypeError", "The input argument 'intervals' must have a field named 't_end'!");
 end
 
 

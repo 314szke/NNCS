@@ -1,6 +1,6 @@
-function [new_in, new_out, trace_end_indices] = TrimTrainingData(in, out, trace_end_indices, epsilon, repetition)
+function [new_in, new_out, new_error_weights, trace_end_indices] = TrimTrainingData(in, out, error_weights, trace_end_indices, epsilon, repetition)
 %% Validate input arguments
-if isa(in, 'double') == 0 || isa(out, 'double') == 0 || isa(trace_end_indices, 'double') == 0 || isa(epsilon, 'double') == 0 || isa(repetition, 'double') == 0
+if isa(in, 'double') == 0 || isa(out, 'double') == 0 || isa(error_weights, 'double') == 0 || isa(trace_end_indices, 'double') == 0 || isa(epsilon, 'double') == 0 || isa(repetition, 'double') == 0
     error("TrimTrainingData:TypeError", "The input arguments must have type 'double' array!");
 end
 if isempty(in) || isempty(out)
@@ -20,6 +20,7 @@ end
 %% Remove each input vector which is less than epsilon distance far from the previous vector
 new_in(:, 1) = in(:, 1);
 new_out = out(1);
+new_error_weights = error_weights(1);
 
 trace_idx = 1;
 last_idx = 1;
@@ -40,6 +41,7 @@ for idx = 2:length(out)
     if num_equal_consecutive <= repetition
         new_in(:, end+1) = in(:, idx);
         new_out = [new_out out(idx)];
+        new_error_weights = [new_error_weights error_weights(idx)];
         last_idx = idx;
     end
 

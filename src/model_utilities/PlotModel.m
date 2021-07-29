@@ -1,16 +1,16 @@
 function PlotModel(model, evaluation_result, plot_requirement, plot_labels)
 %% Validate input arguments
 if isa(model, 'BreachSimulinkSystem') == 0
-    error("PlotModel:TypeError", "The parameter 'model' must have type 'BreachSimulinkSystem'!");
+    error("PlotModel:TypeError", "The input argument 'model' must have type 'BreachSimulinkSystem'!");
 end
 if isa(evaluation_result, 'BreachRequirement') == 0
-    error("PlotModel:TypeError", "The parameter 'evaluation_result' must have type 'BreachRequirement'!");
+    error("PlotModel:TypeError", "The input argument 'evaluation_result' must have type 'BreachRequirement'!");
 end
 if isa(plot_requirement, 'BreachRequirement') == 0
-    error("PlotModel:TypeError", "The parameter 'plot_requirement' must have type 'BreachRequirement'!");
+    error("PlotModel:TypeError", "The input argument 'plot_requirement' must have type 'BreachRequirement'!");
 end
 if isa(plot_labels, 'cell') == 0
-    error("PlotModel:TypeError", "The parameter 'plot_labels' must have type 'cell' array!");
+    error("PlotModel:TypeError", "The input argument 'plot_labels' must have type 'cell' array!");
 end
 
 

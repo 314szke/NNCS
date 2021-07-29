@@ -1,13 +1,13 @@
 function ExploreTrimming(time_values, data, options)
 %% Validate input arguments
 if isa(time_values, 'double') == 0
-    error("ExploreTrimming:TypeError", "The parameter 'time_values' must have type 'double' array!");
+    error("ExploreTrimming:TypeError", "The input argument 'time_values' must have type 'double' array!");
 end
-if isa(data, 'cell') == 0
-    error("ExploreTrimming:TypeError", "The parameter 'data' must have type 'cell' array!");
+if isstruct(data) == 0
+    error("ExploreTrimming:TypeError", "The input argument 'data' must have type 'struct'!");
 end
 if isstruct(options) == 0
-    error("ExploreTrimming:TypeError", "The parameter 'options' must have type 'struct'!");
+    error("ExploreTrimming:TypeError", "The input argument 'options' must have type 'struct'!");
 end
 
 
@@ -20,7 +20,7 @@ for trace_idx = 1:length(data.REF)
     plot(time_values, data.U{trace_idx});
 
     [in, out] = RestructureTrainingData(data.REF{trace_idx}, data.U{trace_idx}, data.Y{trace_idx}, options.input_dimension);
-    [~, out] = TrimTrainingData(in, out, options.trim_distance_criteria, options.trim_allowed_repetition);
+    [~, out, ~, ~] = TrimTrainingData(in, out, out, out, options.trim_distance_criteria, options.trim_allowed_repetition);
 
     trimmed_time = zeros(1, length(out));
     out_idx = 1;

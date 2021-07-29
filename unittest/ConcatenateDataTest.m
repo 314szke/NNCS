@@ -15,6 +15,7 @@ function testEmptyInput(testCase)
     expected.REF = {};
     expected.U = {};
     expected.Y = {};
+    expected.weights = {};
     verifyEqual(testCase, new_data, expected);
 end
 
@@ -25,6 +26,7 @@ function testData1IsEmpty(testCase)
     data2.REF = {trace1 trace2};
     data2.U = {trace1 trace2};
     data2.Y = {trace1 trace2};
+    data2.weights = {trace1 trace2};
     new_data = ConcatenateData(data1, data2);
     verifyEqual(testCase, new_data, data2);
 end
@@ -35,6 +37,7 @@ function testData2IsEmpty(testCase)
     data1.REF = {trace1 trace2};
     data1.U = {trace1 trace2};
     data1.Y = {trace1 trace2};
+    data1.weights = {trace1 trace2};
     data2 = struct();
     new_data = ConcatenateData(data1, data2);
     verifyEqual(testCase, new_data, data1);
@@ -56,18 +59,26 @@ function testConcatenation(testCase)
     y3 = [9 9 9 8 8 8];
     y4 = [1 1 1 7 7 7];
 
+    w1 = [0 0 1 1 0 0];
+    w2 = [0 0.5 1 0.5 0 0];
+    w3 = [0.5 1 0.5 0 0 0];
+    w4 = [0 1 1 1 1 0];
+
     data1.REF = {ref1 ref2};
     data1.U = {u1 u2};
     data1.Y = {y1 y2};
+    data1.weights = {w1 w2};
 
     data2.REF = {ref3 ref4};
     data2.U = {u3 u4};
     data2.Y = {y3 y4};
+    data2.weights = {w3 w4};
 
     new_data = ConcatenateData(data1, data2);
     expected_data.REF = {ref1 ref2 ref3 ref4};
     expected_data.U = {u1 u2 u3 u4};
     expected_data.Y = {y1 y2 y3 y4};
+    expected_data.weights = {w1 w2 w3 w4};
 
     verifyEqual(testCase, new_data, expected_data);
 end

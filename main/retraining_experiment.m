@@ -6,11 +6,11 @@ clear; close all; clc; bdclose('all');
 %% Run experiments
 % Dynamic settings
 environments = [0 1 2];
-window_sizes = [1 2 4];
-cex_thresholds = [5 10 100];
+window_sizes = [2 4];
+cex_thresholds = [5 25];
 
 % Static settings (does not change per experiment case)
-MAX_EXPERIMENT_ITERATION = 10;
+MAX_EXPERIMENT_ITERATION = 3;
 RETRAINING_ERROR_THRESHOLD = 0.01;
 
 % Binary settings

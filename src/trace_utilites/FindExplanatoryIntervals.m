@@ -1,10 +1,10 @@
 function [intervals_per_trace, unique_intervals] = FindExplanatoryIntervals(evaluation_result, criteria)
 %% Validate input arguments
 if isa(evaluation_result, 'BreachRequirement') == 0
-    error("FindExplanatoryIntervals:TypeError", "The parameter 'evaluation_result' must have type 'BreachRequirement'!");
+    error("FindExplanatoryIntervals:TypeError", "The input argument 'evaluation_result' must have type 'BreachRequirement'!");
 end
 if isa(criteria, 'function_handle') == 0
-    error("FindExplanatoryIntervals:TypeError", "The parameter 'criteria' must have type 'function_handle'!");
+    error("FindExplanatoryIntervals:TypeError", "The input argument 'criteria' must have type 'function_handle'!");
 end
 
 

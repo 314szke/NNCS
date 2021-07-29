@@ -5,20 +5,20 @@ if isempty(intervals)
     return;
 end
 if isstruct(intervals) == 0
-    error("ExtendIntervals:TypeError", "The parameter 'intervals' must have type 'struct' array!");
+    error("ExtendIntervals:TypeError", "The input argument 'intervals' must have type 'struct' array!");
 end
 fields = fieldnames(intervals);
 if strcmp(fields{1}, 't_begin') == 0
-    error("ExtendIntervals:TypeError", "The parameter 'intervals' must have a field named 't_begin'!");
+    error("ExtendIntervals:TypeError", "The input argument 'intervals' must have a field named 't_begin'!");
 end
 if strcmp(fields{2}, 't_end') == 0
-    error("ExtendIntervals:TypeError", "The parameter 'intervals' must have a field named 't_end'!");
+    error("ExtendIntervals:TypeError", "The input argument 'intervals' must have a field named 't_end'!");
 end
 if isa(window_size, 'double') == 0
-    error("ExtendIntervals:TypeError", "The parameter 'window_size' must have type 'double'!");
+    error("ExtendIntervals:TypeError", "The input argument 'window_size' must have type 'double'!");
 end
 if isa(max_size, 'double') == 0
-    error("ExtendIntervals:TypeError", "The parameter 'max_size' must have type 'double'!");
+    error("ExtendIntervals:TypeError", "The input argument 'max_size' must have type 'double'!");
 end
 
 

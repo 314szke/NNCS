@@ -20,13 +20,14 @@ for idx = 1:length(nn_models)
     UpdateNeuralNetwork(net, nn_models{idx}.path, nn_models{idx}.block_name);
 end
 nominal_model = CreateModel(nominal_model_path, simulation);
-nn_model = CreateNeuralSwitchingControllerModel(nn_model_path, simulation, coverage_options);
+nn_model = CreateSwitchingControllerNeuralModel(nn_model_path, simulation, coverage_options);
 plot_model1 = CreateModel(parallel_model_before_retraining_path, simulation);
 % IMPORTANT: the retrained models are created at the final verification step!
 
 % Setup the STL requirements
 STL_ReadFile('specification/SwitchingController/switching_controller_specification.stl');
 stl_options.segments = coverage_options.dimension;
+stl_options.stable_window_size = 3;
 stl_options.step_size = 0.01;
 stl_options.max_error = 0.04;
 
@@ -43,7 +44,6 @@ options.plot = 0;
 
 % Other parameters
 training_options.error_threshold = RETRAINING_ERROR_THRESHOLD;
-training_options.target_error_rate = 1e-4;
 data_options.use_all_data = USE_ALL_DATA_FOR_RETRAINING;
 
 rng(1976); % random generator seed for Matlab
@@ -68,11 +68,13 @@ for iteration = 1:MAX_EXPERIMENT_ITERATION
     result.retraining_error_threshold = RETRAINING_ERROR_THRESHOLD;
     result.window_size = WINDOW_SIZE;
     result.use_all_data = USE_ALL_DATA_FOR_RETRAINING;
+    result.error_weight_function = weight_options.function;
 
 
     %% Falsification
     fprintf('1) Find counter-examples with falsification.\n');
-    [complete_new_data, shortened_new_data, num_cex, cex_traces] = GenerateCounterExampleData(nn_model, nominal_model, plot_model1, nn_requirement, nominal_requirement, plot_labels1, options);
+    error_weights = GenerateErrorWeights(simulation.time_values, weight_options);
+    [complete_new_data, shortened_new_data, num_cex, cex_traces] = GenerateCounterExampleData(nn_model, nominal_model, plot_model1, nn_requirement, nominal_requirement, error_weights, plot_labels1, options);
 
     if SHORTENED_CEX == 1
         new_data = shortened_new_data;
@@ -86,7 +88,7 @@ for iteration = 1:MAX_EXPERIMENT_ITERATION
         result.training_error = 0;
         result.num_cex = 0;
         result.remaining_cex = 0;
-        result.data_length = length(data.REF);
+        result.data_length = CountNumberOfDataPoints(data);
         result.cex_length = 0;
         result.trained_from_scratch = 0;
         results{end+1} = result;
@@ -98,19 +100,19 @@ for iteration = 1:MAX_EXPERIMENT_ITERATION
     %% Prepare training data
     fprintf('2) Restructure and trim the training data.\n');
     if data_options.use_all_data == 1
-        training_data = ConcatenateData(data, new_data);
+        training_data = ConcatenateData(new_data, data);
     else
         training_data = new_data;
     end
 
-    [in, out, trace_end_indices] = PrepareTrainingData(training_data, data_options);
+    [in, out, error_weights, trace_end_indices] = PrepareTrainingData(training_data, data_options);
     training_options = SplitTrainingData(trace_end_indices, training_options);
 
 
     %% Retraining with counter examples
     fprintf('3) Retrain with additional counter-example data.\n');
     retraining_timer = tic;
-    [new_net, tr, trained_from_scratch] = RetrainNeuralNetwork(net, in, out, training_options);
+    [new_net, tr, trained_from_scratch] = RetrainNeuralNetwork(net, in, out, error_weights, training_options);
     timer.retrain = toc(retraining_timer);
 
     fprintf('Retraining time: %0.2f seconds.\n', timer.retrain);
@@ -121,7 +123,7 @@ for iteration = 1:MAX_EXPERIMENT_ITERATION
     %% Save retrained model
     fprintf('4) Update the Simulink models.\n');
     for idx = 1:length(new_nn_models)
-        UpdateNeuralNetwork(net, new_nn_models{idx}.path, new_nn_models{idx}.block_name);
+        UpdateNeuralNetwork(new_net, new_nn_models{idx}.path, new_nn_models{idx}.block_name);
     end
 
 
@@ -136,8 +138,8 @@ for iteration = 1:MAX_EXPERIMENT_ITERATION
     result.training_error = tr.best_tperf;
     result.num_cex = num_cex;
     result.remaining_cex = remaining_cex;
-    result.data_length = length(data.REF);
-    result.cex_length = length(new_data.REF);
+    result.data_length = CountNumberOfDataPoints(data);
+    result.cex_length = CountNumberOfDataPoints(new_data);
     result.trained_from_scratch = trained_from_scratch;
     results{end+1} = result;
 
@@ -151,7 +153,7 @@ for iteration = 1:MAX_EXPERIMENT_ITERATION
     %% Update simulink models for next iteration
     fprintf('6) Update the Simulink models for the next iteration.\n');
     for idx = 1:length(nn_models)
-        UpdateNeuralNetwork(net, nn_models{idx}.path, nn_models{idx}.block_name);
+        UpdateNeuralNetwork(new_net, nn_models{idx}.path, nn_models{idx}.block_name);
     end
 end
 

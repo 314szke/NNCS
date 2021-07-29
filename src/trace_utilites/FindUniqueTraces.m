@@ -1,21 +1,21 @@
 function unique_trace_indexes = FindUniqueTraces(trace_intervals, unique_intervals)
 %% Validate input arguments
 if isa(trace_intervals, 'cell') == 0
-    error("FindUniqueTraces:TypeError", "The parameter 'trace_intervals' must have type 'cell' array!");
+    error("FindUniqueTraces:TypeError", "The input argument 'trace_intervals' must have type 'cell' array!");
 end
 if isstruct(unique_intervals) == 0
-    error("FindUniqueTraces:TypeError", "The parameter 'unique_intervals' must have type 'struct'!");
+    error("FindUniqueTraces:TypeError", "The input argument 'unique_intervals' must have type 'struct'!");
 end
 fields = fieldnames(unique_intervals);
 if strcmp(fields{1}, 'intervals') == 0
-    error("FindUniqueTraces:TypeError", "The parameter 'unique_intervals' must have a field named 'intervals'!");
+    error("FindUniqueTraces:TypeError", "The input argument 'unique_intervals' must have a field named 'intervals'!");
 end
 if isempty(trace_intervals) || isempty(unique_intervals.intervals)
     unique_trace_indexes = [];
     return;
 end
 if isstruct(unique_intervals.intervals) == 0
-    error("FindUniqueTraces:TypeError", "The parameter 'unique_intervals.intervals' must have type 'struct' array!");
+    error("FindUniqueTraces:TypeError", "The input argument 'unique_intervals.intervals' must have type 'struct' array!");
 end
 
 
@@ -59,24 +59,24 @@ end
 function value = EqualTimeIntervals(t1, t2)
 %% Parameter checking
 if isstruct(t1) == 0
-    error("EqualTimeIntervals:TypeError", "The parameter 't1' must have type 'struct'!");
+    error("EqualTimeIntervals:TypeError", "The input argument 't1' must have type 'struct'!");
 end
 if isstruct(t2) == 0
-    error("EqualTimeIntervals:TypeError", "The parameter 't2' must have type 'struct'!");
+    error("EqualTimeIntervals:TypeError", "The input argument 't2' must have type 'struct'!");
 end
 fields = fieldnames(t1);
 if strcmp(fields{1}, 't_begin') == 0
-    error("EqualTimeIntervals:TypeError", "The parameter 't1' must have a field named 't_begin'!");
+    error("EqualTimeIntervals:TypeError", "The input argument 't1' must have a field named 't_begin'!");
 end
 if strcmp(fields{2}, 't_end') == 0
-    error("EqualTimeIntervals:TypeError", "The parameter 't1' must have a field named 't_end'!");
+    error("EqualTimeIntervals:TypeError", "The input argument 't1' must have a field named 't_end'!");
 end
 fields = fieldnames(t2);
 if strcmp(fields{1}, 't_begin') == 0
-    error("EqualTimeIntervals:TypeError", "The parameter 't2' must have a field named 't_begin'!");
+    error("EqualTimeIntervals:TypeError", "The input argument 't2' must have a field named 't_begin'!");
 end
 if strcmp(fields{2}, 't_end') == 0
-    error("EqualTimeIntervals:TypeError", "The parameter 't2' must have a field named 't_end'!");
+    error("EqualTimeIntervals:TypeError", "The input argument 't2' must have a field named 't_end'!");
 end
 
 

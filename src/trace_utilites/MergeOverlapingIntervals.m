@@ -5,14 +5,14 @@ if isempty(intervals)
     return;
 end
 if isstruct(intervals) == 0
-    error("MergeOverlapingIntervals:TypeError", "The parameter 'intervals' must have type 'struct' array!");
+    error("MergeOverlapingIntervals:TypeError", "The input argument 'intervals' must have type 'struct' array!");
 end
 fields = fieldnames(intervals);
 if strcmp(fields{1}, 't_begin') == 0
-    error("MergeOverlapingIntervals:TypeError", "The parameter 'intervals' must have a field named 't_begin'!");
+    error("MergeOverlapingIntervals:TypeError", "The input argument 'intervals' must have a field named 't_begin'!");
 end
 if strcmp(fields{2}, 't_end') == 0
-    error("MergeOverlapingIntervals:TypeError", "The parameter 'intervals' must have a field named 't_end'!");
+    error("MergeOverlapingIntervals:TypeError", "The input argument 'intervals' must have a field named 't_end'!");
 end
 
 

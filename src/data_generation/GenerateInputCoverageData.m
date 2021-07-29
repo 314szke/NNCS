@@ -1,29 +1,32 @@
-function [data, num_traces, num_points] = GenerateInputCoverageData(model, options)
+function [data, num_traces, num_points] = GenerateInputCoverageData(model, error_weights, options)
 %% Validate input arguments
 if isa(model, 'BreachSimulinkSystem') == 0
-    error("The parameter 'model' must have type 'BreachSimulinkSystem'!");
+    error("GenerateInputCoverageData:TypeError", "The input argument 'model' must have type 'BreachSimulinkSystem'!");
+end
+if isa(error_weights, 'double') == 0
+    error("GenerateInputCoverageData:TypeError", "The input argument 'error_weights' must have type 'double' array!");
 end
 if isstruct(options) == 0
-    error("The parameter 'options' must have type 'struct'!");
+    error("GenerateInputCoverageData:TypeError", "The input argument 'options' must have type 'struct'!");
 end
 fields = fieldnames(options);
 if strcmp(fields{1}, 'min') == 0
-    error("The parameter 'options' must have a field named 'min'!");
+    error("GenerateInputCoverageData:InvalidInput", "The input argument 'options' must have a field named 'min'!");
 end
 if strcmp(fields{2}, 'max') == 0
-    error("The parameter 'options' must have a field named 'max'!");
+    error("GenerateInputCoverageData:InvalidInput", "The input argument 'options' must have a field named 'max'!");
 end
 if strcmp(fields{3}, 'cell_size') == 0
-    error("The parameter 'options' must have a field named 'cell_size'!");
+    error("GenerateInputCoverageData:InvalidInput", "The input argument 'options' must have a field named 'cell_size'!");
 end
 if strcmp(fields{4}, 'dimension') == 0
-    error("The parameter 'options' must have a field named 'dimension'!");
+    error("GenerateInputCoverageData:InvalidInput", "The input argument 'options' must have a field named 'dimension'!");
 end
 if strcmp(fields{5}, 'coverage_point_type') == 0
-    error("The parameter 'options' must have a field named 'coverage_point_type'!");
+    error("GenerateInputCoverageData:InvalidInput", "The input argument 'options' must have a field named 'coverage_point_type'!");
 end
 if strcmp(fields{6}, 'plot') == 0
-    error("The parameter 'options' must have a field named 'plot'!");
+    error("GenerateInputCoverageData:InvalidInput", "The input argument 'options' must have a field named 'plot'!");
 end
 
 
@@ -64,7 +67,7 @@ model.SetParam(input_parameters, coverage_points);
 
 %% Simulate the model and extract the trace data
 model.Sim();
-data = CreateDataWithCompleteTraces(model, num_cells);
+data = CreateDataWithCompleteTraces(model, num_cells, error_weights);
 num_traces = num_cells;
 num_points = num_traces * length(data.REF{1});
 

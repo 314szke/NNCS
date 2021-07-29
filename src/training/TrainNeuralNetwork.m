@@ -1,13 +1,16 @@
-function [net, tr] = TrainNeuralNetwork(in, out, options)
+function [net, tr] = TrainNeuralNetwork(in, out, error_weights, options)
 %% Validate input arguments
 if isa(in, 'double') == 0
-    error("TrainNeuralNetwork:TypeError", "The argument 'in' must have type 'double' array!");
+    error("TrainNeuralNetwork:TypeError", "The input argument 'in' must have type 'double' array!");
 end
 if isa(out, 'double') == 0
-    error("TrainNeuralNetwork:TypeError", "The argument 'out' must have type 'double' array!");
+    error("TrainNeuralNetwork:TypeError", "The input argument 'out' must have type 'double' array!");
+end
+if isa(error_weights, 'double') == 0
+    error("TrainNeuralNetwork:TypeError", "The input argument 'error_weights' must have type 'double' array!");
 end
 if isstruct(options) == 0
-    error("TrainNeuralNetwork:TypeError", "The argument 'options' must have type 'struct'!");
+    error("TrainNeuralNetwork:TypeError", "The input argument 'options' must have type 'struct'!");
 end
 
 
@@ -24,16 +27,15 @@ end
 
 net.trainParam.max_fail = options.max_validation_checks;
 net.trainParam.goal = options.target_error_rate;
+net.trainParam.epochs = options.max_epochs;
 
-net.performParam.regularization = options.regularization;
+net.performParam.regularization = 0;
 net.performParam.normalization = 'none';
 
 net.divideParam.trainInd = options.training_data_indices;
 net.divideParam.valInd = options.validation_data_indices;
 net.divideParam.testInd = options.test_data_indices;
 
-net = configure(net, in, out);
-net = init(net);
-[net, tr] = train(net, in, out);
+[net, tr] = train(net, in, out, {}, {}, error_weights);
 
 end

@@ -21,6 +21,7 @@ nn_models{3}.block_name = 'nn_old';
 % Simulink parameters
 simulation.time_window = 20;
 simulation.time_step = 0.01;
+simulation.time_values = 0:simulation.time_step:simulation.time_window;
 
 % Create required models
 nominal_model = CreateModel(nominal_model_path, simulation);
@@ -40,18 +41,28 @@ data_options.trim_distance_criteria = 0.001;
 data_options.trim_allowed_repetition = 20;
 data_options.plot = 0;
 
+% Training error weight options
+weight_options.function = 'gaussian';
+weight_options.max_weight = 1;
+weight_options.min_weight = 0.001;
+weight_options.max_position = (simulation.time_window / 2) + 1;
+weight_options.width = 1;
+weight_options.plot = 0;
+
 % Training parameters
 training_options.neurons = [20 10];
 training_options.loss_function = 'mse';
 training_options.optimizer_function = 'trainlm';
 training_options.divider_function = 'divideind';
+training_options.activation_function = 'tansig';
+
 training_options.training_data_ratio = 0.7;
 training_options.validation_data_ratio = 0.1;
 training_options.test_data_ratio = 0.2;
-training_options.activation_function = 'tansig';
-training_options.max_validation_checks = 50;
-training_options.target_error_rate = 1e-3;
-training_options.regularization = 0;
+
+training_options.max_validation_checks = 10;
+training_options.max_epochs = 10;
+training_options.target_error_rate = 0.0001;
 
 % Other parameters
 workspace_name = 'nn.mat';
@@ -59,23 +70,25 @@ workspace_name = 'nn.mat';
 
 %% Data generation
 fprintf('1) Create coverage data.\n');
-[data, num_traces, num_points] = GenerateInputCoverageData(nominal_model, coverage_options);
+error_weights = GenerateErrorWeights(simulation.time_values, weight_options);
+[data, num_traces, num_points] = GenerateInputCoverageData(nominal_model, error_weights, coverage_options);
 fprintf('Number of data points generated with coverage: %d.\n', num_points);
 
 
 %% Prepare training data
 fprintf('2) Restructure and trim the training data.\n');
-[in, out, trace_end_indices] = PrepareTrainingData(data, data_options);
+[in, out, error_weights, trace_end_indices] = PrepareTrainingData(data, data_options);
 training_options = SplitTrainingData(trace_end_indices, training_options);
+
 if data_options.trimming_enabled && data_options.plot
-    ExploreTrimming(nominal_model.GetTime(), data, data_options);
+    ExploreTrimming(simulation.time_values, data, data_options);
 end
 
 
 %% Training
 fprintf('3) Create and train the initial neural network.\n');
 training_timer = tic;
-[net, tr] = TrainNeuralNetwork(in, out, training_options);
+[net, tr] = TrainNeuralNetwork(in, out, error_weights, training_options);
 timer.train = toc(training_timer);
 
 fprintf('Training time: %0.2f seconds.\n', timer.train);

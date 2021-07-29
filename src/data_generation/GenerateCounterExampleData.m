@@ -1,22 +1,28 @@
-function [complete_new_data, shortened_new_data, num_cex, cex_traces] = GenerateCounterExampleData(nn_model, nominal_model, plot_model, nn_requirement, nominal_requirement, plot_labels, options)
+function [complete_new_data, shortened_new_data, num_cex, cex_traces] = GenerateCounterExampleData(nn_model, nominal_model, plot_model, nn_requirement, nominal_requirement, error_weights, plot_labels, options)
 %% Validate input arguments
 if isa(nn_model, 'BreachSimulinkSystem') == 0
-    error("GenerateCounterExampleData:TypeError", "The parameter 'nn_model' must have type 'BreachSimulinkSystem'!");
+    error("GenerateCounterExampleData:TypeError", "The input argument 'nn_model' must have type 'BreachSimulinkSystem'!");
 end
 if isa(nominal_model, 'BreachSimulinkSystem') == 0
-    error("GenerateCounterExampleData:TypeError", "The parameter 'nominal_model' must have type 'BreachSimulinkSystem'!");
+    error("GenerateCounterExampleData:TypeError", "The input argument 'nominal_model' must have type 'BreachSimulinkSystem'!");
 end
 if isa(plot_model, 'BreachSimulinkSystem') == 0
-    error("GenerateCounterExampleData:TypeError", "The parameter 'plot_model' must have type 'BreachSimulinkSystem'!");
+    error("GenerateCounterExampleData:TypeError", "The input argument 'plot_model' must have type 'BreachSimulinkSystem'!");
 end
 if isa(nn_requirement, 'BreachRequirement') == 0
-    error("GenerateCounterExampleData:TypeError", "The parameter 'nn_requirement' must have type 'BreachRequirement'!");
+    error("GenerateCounterExampleData:TypeError", "The input argument 'nn_requirement' must have type 'BreachRequirement'!");
 end
 if isa(nominal_requirement, 'BreachRequirement') == 0
-    error("GenerateCounterExampleData:TypeError", "The parameter 'nominal_requirement' must have type 'BreachRequirement'!");
+    error("GenerateCounterExampleData:TypeError", "The input argument 'nominal_requirement' must have type 'BreachRequirement'!");
+end
+if isa(error_weights, 'double') == 0
+    error("GenerateCounterExampleData:TypeError", "The input argument 'error_weights' must have type 'double' array!");
 end
 if isa(plot_labels, 'cell') == 0
-    error("GenerateCounterExampleData:TypeError", "The parameter 'plot_labels' must have type 'cell' array!");
+    error("GenerateCounterExampleData:TypeError", "The input argument 'plot_labels' must have type 'cell' array!");
+end
+if isstruct(options) == 0
+    error("GenerateCounterExampleData:TypeError", "The input argument 'options' must have type 'struct'!");
 end
 
 
@@ -50,7 +56,6 @@ end
 %% Diagnose counter-examples
 [cex_intervals, unique_cex_intervals] = FindExplanatoryIntervals(falsification_result, @IsCounterExample);
 unique_cex_trace_indexes = FindUniqueTraces(cex_intervals, unique_cex_intervals);
-num_violations = length(unique_cex_intervals.intervals);
 
 num_cex = length(unique_cex_trace_indexes);
 if num_cex > options.cex_threshold
@@ -85,7 +90,7 @@ else
     unique_trace_indexes = unique_cex_trace_indexes;
 end
 
-complete_new_data = CreateDataWithCompleteTraces(nominal_model, num_cex);
-shortened_new_data = CreateDataWithShortenedTraces(nominal_model, result, trace_intervals, unique_trace_indexes, options.window_size);
+complete_new_data = CreateDataWithCompleteTraces(nominal_model, num_cex, error_weights);
+shortened_new_data = CreateDataWithShortenedTraces(nominal_model, result, trace_intervals, unique_trace_indexes, options.window_size, error_weights);
 
 end

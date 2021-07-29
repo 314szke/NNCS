@@ -1,22 +1,34 @@
-function [new_net, tr, trained_from_scratch] = RetrainNeuralNetwork(net, in, out, options)
+function [new_net, tr, trained_from_scratch] = RetrainNeuralNetwork(net, in, out, error_weights, options)
 %% Validate input arguments
 if isa(net, 'network') == 0
-    error("RetrainNeuralNetwork:TypeError", "The argument 'net' must have type 'network'!");
+    error("RetrainNeuralNetwork:TypeError", "The input argument 'net' must have type 'network'!");
 end
 if isa(in, 'double') == 0
-    error("RetrainNeuralNetwork:TypeError", "The argument 'in' must have type 'double' array!");
+    error("RetrainNeuralNetwork:TypeError", "The input argument 'in' must have type 'double' array!");
 end
 if isa(out, 'double') == 0
-    error("RetrainNeuralNetwork:TypeError", "The argument 'out' must have type 'double' array!");
+    error("RetrainNeuralNetwork:TypeError", "The input argument 'out' must have type 'double' array!");
+end
+if isa(error_weights, 'double') == 0
+    error("RetrainNeuralNetwork:TypeError", "The input argument 'error_weights' must have type 'double' array!");
 end
 if isstruct(options) == 0
-    error("RetrainNeuralNetwork:TypeError", "The argument 'options' must have type 'struct'!");
+    error("RetrainNeuralNetwork:TypeError", "The input argument 'options' must have type 'struct'!");
 end
 
 
 %% Retrain the network
 trained_from_scratch = 0;
-[new_net, tr] = train(net, in, out);
+
+net.trainParam.max_fail = options.max_validation_checks;
+net.trainParam.goal = options.target_error_rate;
+net.trainParam.epochs = options.max_epochs;
+
+net.divideParam.trainInd = options.training_data_indices;
+net.divideParam.valInd = options.validation_data_indices;
+net.divideParam.testInd = options.test_data_indices;
+
+[new_net, tr] = train(net, in, out, {}, {}, error_weights);
 
 % We reached the training error limit -> drop learnt weights and biases
 if tr.best_tperf > options.error_threshold

@@ -1,13 +1,13 @@
 function [model, requirement, num_cex] = EvaluateModel(model, trace_system, requirement)
 %% Validate input arguments
 if isa(model, 'BreachSimulinkSystem') == 0
-    error("EvaluateModel:TypeError", "The parameter 'model' must have type 'BreachSimulinkSystem'!");
+    error("EvaluateModel:TypeError", "The input argument 'model' must have type 'BreachSimulinkSystem'!");
 end
 if isa(trace_system, 'BreachTraceSystem') == 0
-    error("EvaluateModel:TypeError", "The parameter 'trace_system' must have type 'BreachTraceSystem'!");
+    error("EvaluateModel:TypeError", "The input argument 'trace_system' must have type 'BreachTraceSystem'!");
 end
 if isa(requirement, 'BreachRequirement') == 0
-    error("EvaluateModel:TypeError", "The parameter 'requirement' must have type 'BreachRequirement'!");
+    error("EvaluateModel:TypeError", "The input argument 'requirement' must have type 'BreachRequirement'!");
 end
 
 

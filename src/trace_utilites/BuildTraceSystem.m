@@ -1,10 +1,10 @@
 function trace_system = BuildTraceSystem(evaluation_result, unique_trace_indexes)
 %% Validate input arguments
 if isa(evaluation_result, 'BreachRequirement') == 0
-    error("BuildTraceSystem:TypeError", "The parameter 'evaluation_result' must have type 'BreachRequirement'!");
+    error("BuildTraceSystem:TypeError", "The input argument 'evaluation_result' must have type 'BreachRequirement'!");
 end
 if isa(unique_trace_indexes, 'double') == 0
-    error("BuildTraceSystem:TypeError", "The parameter 'unique_trace_indexes' must have type 'double' array!");
+    error("BuildTraceSystem:TypeError", "The input argument 'unique_trace_indexes' must have type 'double' array!");
 end
 
 
