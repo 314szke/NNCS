@@ -1,7 +1,7 @@
 # Predicate to detect an input/ref step
 ref_step := abs(ref[t+time_step]-ref[t])>step_size
 
-# Predicate to checks output error is in right range
+# Predicate to check that the output error is in the right range
 error_nom_init := abs(y[t]-ref[t])<max_error
 error_nom := abs(y[t]-ref[t])<max_error
 
@@ -12,14 +12,14 @@ error_nn_new_init := abs(y_nn_new[t]-ref[t])<max_error
 error_nn_new := abs(y_nn_new[t]-ref[t])<max_error
 
 # Stabilization after an input/ref step
-stable_nom_init := ev_[0,interval_length] alw_[0,3] (error_nom_init)
-stable_nom := ev_[0,interval_length] alw_[0,3] (error_nom)
+stable_nom_init := ev_[0,interval_length] alw_[0,stable_window_size] (error_nom_init)
+stable_nom := ev_[0,interval_length] alw_[0,stable_window_size] (error_nom)
 
-stable_nn_init := ev_[0,interval_length] alw_[0,3] (error_nn_init)
-stable_nn := ev_[0,interval_length] alw_[0,3] (error_nn)
+stable_nn_init := ev_[0,interval_length] alw_[0,stable_window_size] (error_nn_init)
+stable_nn := ev_[0,interval_length] alw_[0,stable_window_size] (error_nn)
 
-stable_nn_new_init := ev_[0,interval_length] alw_[0,3] (error_nn_new_init)
-stable_nn_new := ev_[0,interval_length] alw_[0,3] (error_nn_new)
+stable_nn_new_init := ev_[0,interval_length] alw_[0,stable_window_size] (error_nn_new_init)
+stable_nn_new := ev_[0,interval_length] alw_[0,stable_window_size] (error_nn_new)
 
 # Stabilization after an input/ref step during the entire simulation
 alw_stable_nom := alw_[0,sim_time] stable_nom

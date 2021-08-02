@@ -22,6 +22,7 @@ requirement.SetParam('interval_length', interval_length);
 sim_time = simulation.time_window - (interval_length + options.stable_window_size);
 requirement.SetParam('sim_time', simulation.time_window);
 requirement.SetParam('time_step', simulation.time_step);
+requirement.SetParam('stable_window_size', options.stable_window_size);
 
 % Step size determines how big of a jump in the reference is considered as a step
 requirement.SetParam('step_size', options.step_size);
