@@ -19,7 +19,8 @@ simulation.time_step = 0.01;
 simulation.time_values = 0:simulation.time_step:simulation.time_window;
 
 % Create required models
-nominal_model = CreateModel(nominal_model_path, simulation);
+model_options = struct(); % there are no parameters for SwitchingController models
+nominal_model = CreateModel(nominal_model_path, simulation, model_options);
 
 % Input coverage parameters
 coverage_options.min = 0;

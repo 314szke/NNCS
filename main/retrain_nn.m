@@ -61,11 +61,11 @@ end
 
 %% Verification
 fprintf('5) Verify if counter-examples are eliminated.\n');
-nn_retrained_model = CreateModel(nn_model_retrained_path, simulation);
+nn_retrained_model = CreateModel(nn_model_retrained_path, simulation, model_options);
 [~, evaluation_result, remaining_cex] = EvaluateModel(nn_retrained_model, cex_traces, nn_requirement);
 fprintf('Number of counter-examples remaining after retraining: %i/%i.\n', remaining_cex, num_cex);
 
 if options.plot == 1
-    plot_model2 = CreateModel(parallel_model_after_retraining_path, simulation);
+    plot_model2 = CreateModel(parallel_model_after_retraining_path, simulation, model_options);
     PlotModel(plot_model2, evaluation_result, nn_new_requirement, plot_labels2);
 end

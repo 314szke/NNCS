@@ -13,7 +13,8 @@ simulation.time_values = 0:simulation.time_step:simulation.time_window;
 %% Config Breach interface
 model_path = 'models/SwitchingController';
 nn_model_path = sprintf('%s/switching_controller_nn', model_path);
-nn_model = CreateModel(nn_model_path, simulation);
+model_options = struct();
+nn_model = CreateModel(nn_model_path, simulation, model_options);
 nn_model.SetInputGen('UniStep2');
 input_parameters = nn_model.expand_param_name('ref_u.+');
 nn_model.SetParamRanges(input_parameters, [0 1]);

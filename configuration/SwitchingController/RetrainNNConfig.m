@@ -11,9 +11,9 @@ new_nn_models{2}.block_name = 'nn_new';
 for idx = 1:length(nn_models)
     UpdateNeuralNetwork(net, nn_models{idx}.path, nn_models{idx}.block_name);
 end
-nominal_model = CreateModel(nominal_model_path, simulation);
-nn_model = CreateSwitchingControllerNeuralModel(nn_model_path, simulation, coverage_options);
-plot_model1 = CreateModel(parallel_model_before_retraining_path, simulation);
+nominal_model = CreateModel(nominal_model_path, simulation, model_options);
+nn_model = CreateModelWithFixedInputGenerator(nn_model_path, simulation, coverage_options, model_options);
+plot_model1 = CreateModel(parallel_model_before_retraining_path, simulation, model_options);
 % IMPORTANT: the retrained models are created at the final verification step!
 
 % Setup the STL requirements

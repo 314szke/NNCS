@@ -87,7 +87,7 @@ for iteration = 1:MAX_EXPERIMENT_ITERATION
 
     %% Verify if the counter examples disappeared
     fprintf('5) Verify if counter-examples are eliminated.\n');
-    nn_retrained_model = CreateModel(nn_model_retrained_path, simulation);
+    nn_retrained_model = CreateModel(nn_model_retrained_path, simulation, model_options);
     [~, ~, remaining_cex] = EvaluateModel(nn_retrained_model, cex_traces, nn_requirement);
 
 
