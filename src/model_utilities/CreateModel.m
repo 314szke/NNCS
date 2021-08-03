@@ -13,6 +13,7 @@ end
 model = BreachSimulinkSystem(model_name, {});
 model.SetTime(simulation.time_values);
 
+warning('off', 'SetParam:param_not_in_list');
 fields = fieldnames(model_options);
 for idx = 1:length(fields)
     model.SetParam(fields{idx}, model_options.(fields{idx}));

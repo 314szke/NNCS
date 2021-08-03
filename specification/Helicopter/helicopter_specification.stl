@@ -1,11 +1,14 @@
 # Predicate to check that the output error is in the right range
 error_nom := abs(y[t]-ref[t])<max_error
 error_nn := abs(y_nn[t]-ref[t])<max_error
+error_nn_new := abs(y_nn_new[t]-ref[t])<max_error
 
 # Stabilization property
 stable_nom := alw_[0,stable_window_size] (error_nom)
 stable_nn := alw_[0,stable_window_size] (error_nn)
+stable_nn_new := alw_[0,stable_window_size] (error_nn_new)
 
 # High level formulas
 phi_nominal := ev_[0,sim_time] stable_nom
 phi_nn := ev_[0,sim_time] stable_nn
+phi_nn_new := ev_[0,sim_time] stable_nn_new
