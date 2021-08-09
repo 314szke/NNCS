@@ -32,9 +32,11 @@ net.trainParam.epochs = options.max_epochs;
 net.performParam.regularization = 0;
 net.performParam.normalization = 'none';
 
-net.divideParam.trainInd = options.training_data_indices;
-net.divideParam.valInd = options.validation_data_indices;
-net.divideParam.testInd = options.test_data_indices;
+if strcmp(options.divider_function, 'divideind')
+    net.divideParam.trainInd = options.training_data_indices;
+    net.divideParam.valInd = options.validation_data_indices;
+    net.divideParam.testInd = options.test_data_indices;
+end
 
 [net, tr] = train(net, in, out, {}, {}, error_weights);
 

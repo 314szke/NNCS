@@ -24,9 +24,11 @@ net.trainParam.max_fail = options.max_validation_checks;
 net.trainParam.goal = options.target_error_rate;
 net.trainParam.epochs = options.max_epochs;
 
-net.divideParam.trainInd = options.training_data_indices;
-net.divideParam.valInd = options.validation_data_indices;
-net.divideParam.testInd = options.test_data_indices;
+if strcmp(options.divider_function, 'divideind')
+    net.divideParam.trainInd = options.training_data_indices;
+    net.divideParam.valInd = options.validation_data_indices;
+    net.divideParam.testInd = options.test_data_indices;
+end
 
 [new_net, tr] = train(net, in, out, {}, {}, error_weights);
 
